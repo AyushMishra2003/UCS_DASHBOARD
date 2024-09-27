@@ -247,31 +247,41 @@ const AirportRate = () => {
 
             <h2 className="text-2xl mb-4">Add New Rate</h2>
             <div className="flex space-x-4 mb-4">
-              <input
-                type="text"
-                value={newRate.kilometer}
-                onChange={(e) => setNewRate({ ...newRate, kilometer: e.target.value })}
-                placeholder="Kilometer"
-                className="border p-2"
-              />
-              <input
-                type="text"
-                value={newRate.rate}
-                onChange={(e) => setNewRate({ ...newRate, rate: e.target.value })}
-                placeholder="Rate"
-                className="border p-2"
-              />
-              <input
-                type="text"
-                value={newRate.extra}
-                onChange={(e) => setNewRate({ ...newRate, extra: e.target.value })}
-                placeholder="Extra"
-                className="border p-2"
-              />
-              <button onClick={handleAddRate} className="bg-blue-500 text-white p-2 rounded">
-                Add Rate
-              </button>
-            </div>
+  <select
+    value={newRate.kilometer}
+    onChange={(e) => setNewRate({ ...newRate, kilometer: e.target.value })}
+    className="border p-2"
+  >
+    <option value="" disabled>
+      Select Kilometer
+    </option>
+    <option value="30">30</option>
+    <option value="45">45</option>
+    <option value="50">50</option>
+    <option value="70">70</option>
+  </select>
+
+  <input
+    type="text"
+    value={newRate.rate}
+    onChange={(e) => setNewRate({ ...newRate, rate: e.target.value })}
+    placeholder="Rate"
+    className="border p-2"
+  />
+
+  <input
+    type="text"
+    value={newRate.extra}
+    onChange={(e) => setNewRate({ ...newRate, extra: e.target.value })}
+    placeholder="Extra"
+    className="border p-2"
+  />
+
+  <button onClick={handleAddRate} className="bg-blue-500 text-white p-2 rounded">
+    Add Rate
+  </button>
+</div>
+
           </>
         )}
       </div>
