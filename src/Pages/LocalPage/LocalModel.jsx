@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
+
 const LocalCategoryModal = ({ isOpen, onClose, onAddCategory, selectedCity, data, editingCategory }) => {
   const [perKm, setPerKm] = useState('');
   const [perHour, setPerHour] = useState('');
