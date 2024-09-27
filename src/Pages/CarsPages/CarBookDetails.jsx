@@ -273,7 +273,7 @@ const CarBookDetails = () => {
              {/* Extra Rates Input */}
              {!isBookingCancelled && (
                 <div className="mb-6 bg-gray-50 p-4 border border-gray-300 rounded-lg shadow-sm">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Extra Extra Kilometer:</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Extra Kilometer:</label>
                     <input
                         type="number"
                         className="p-3 border border-gray-300 rounded w-full mb-4"
@@ -297,13 +297,13 @@ const CarBookDetails = () => {
             )}
               {!isBookingCancelled && (
                 <div className="mb-6 bg-gray-50 p-4 border border-gray-300 rounded-lg shadow-sm">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Extra Extra Kilometer:</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Extra Hours:</label>
                     <input
                         type="number"
                         className="p-3 border border-gray-300 rounded w-full mb-4"
                         placeholder="Enter extra Kilometer"
-                        value={extraRates}
-                        onChange={(e) => setExtraRates(Number(e.target.value))}
+                        // value={extraRates}
+                        // onChange={(e) => setExtraRates(Number(e.target.value))}
                     />
                     {isBookingComplete && (
                         <button
@@ -323,11 +323,11 @@ const CarBookDetails = () => {
                 <div className="mb-6 bg-gray-50 p-4 border border-gray-300 rounded-lg shadow-sm">
                     <label className="block text-sm font-medium text-gray-700 mb-2">Extra Description:</label>
                     <input
-                        type="number"
+                        type="text"
                         className="p-3 border border-gray-300 rounded w-full mb-4"
                         placeholder="Enter Descirptions"
-                        value={extraRates}
-                        onChange={(e) => setExtraRates(Number(e.target.value))}
+                        // value={extraRates}
+                        // onChange={(e) => setExtraRates(Number(e.target.value))}
                     />
                     {isBookingComplete && (
                         <button
