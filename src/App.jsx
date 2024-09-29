@@ -66,6 +66,7 @@ import BookOnewayCab from './Pages/BookingCab/BookingOneWay'
 import RoundTripBook from './Pages/BookingCab/RoundTripBooking'
 import Inquiry from './Pages/Inquiry/Inquiry'
 import MarketingComponent from './Layouts/Demo'
+import WebsiteDetails from './Pages/WebsiteContent/WebsiteDetails'
 
 
 const App = () => {
@@ -82,6 +83,7 @@ const App = () => {
           <Route path='/operator' element={<OperatorList/>} />
           <Route path='/add' element={<AddOperatorPage/>} />
           <Route path='/website-content' element={<WebsiteContent />} />
+          <Route path='/website-content/details/:name' element={<WebsiteDetails/>} />
           <Route path='/discount' element={<DiscountManager/>} />
           <Route path='/chart' element={<CityRateList/>} />
           <Route path='/website-content/about' element={<AboutContent />} />

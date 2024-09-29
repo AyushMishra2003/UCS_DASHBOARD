@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import HomeLayout from '../../Layouts/HomeLayouts'
 import { FaHome, FaPlaceOfWorship } from 'react-icons/fa'
 import { MdContactPhone, MdOutlineRoundaboutRight, MdReviews } from 'react-icons/md'
 import WebsiteContentCard from '../../Components/Cards/WebsiteContentCard'
 import { GrGallery } from "react-icons/gr";
+import { useDispatch, useSelector } from 'react-redux'
+import { getAllPages } from '../../Redux/Slices/dynamicSlice'
 const WebsiteContent = () => {
     const list = [
         {
@@ -55,11 +57,31 @@ const WebsiteContent = () => {
         }
     ]
 
+    const dispatch=useDispatch()
+
+
+    const {dynamicPage,loading,error}=useSelector((state)=>state.dynamic)
+
+    console.log(dynamicPage);
+    
+
+    const fetchData=async()=>{
+    console.log("hua");
+    
+       const response=await dispatch(getAllPages())
+       console.log(response);
+       
+    }
+
+    useEffect(()=>{
+        fetchData()
+    },[])
+
     return (
         <HomeLayout>
             <div className='grid items-center justify-center grid-cols-1 gap-6 p-2 pt-6 pb-10 sm:p-4 md:p-4 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2'>
 
-                {list.map((data, index) => <WebsiteContentCard data={data} key={index + 1} />)}
+                {dynamicPage.map((data, index) => <WebsiteContentCard data={data} key={index + 1} />)}
             </div>
         </HomeLayout>
     )

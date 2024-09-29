@@ -12,8 +12,8 @@ import airpotRateReducer from './Slices/AirpotSlice'
 import categorySliceReducer from './Slices/CategorySlice'
 import localTripReducer from './Slices/localTripSlice'
 import airportTripReducer from './Slices/airportSlice'
-
 import outstationSlice from './Slices/outStationSlice'
+import dynamicSlice from './Slices/dynamicSlice'
 
 const store = configureStore({
     reducer: {
@@ -30,7 +30,8 @@ const store = configureStore({
         category:categorySliceReducer,
         localTrip: localTripReducer,
         airportTrip: airportTripReducer,
-        outstation: outstationSlice
+        outstation: outstationSlice,
+        dynamic:dynamicSlice
     },
     devTools: true
 })
