@@ -67,7 +67,8 @@ import RoundTripBook from './Pages/BookingCab/RoundTripBooking'
 import Inquiry from './Pages/Inquiry/Inquiry'
 import MarketingComponent from './Layouts/Demo'
 import WebsiteDetails from './Pages/WebsiteContent/WebsiteDetails'
-
+import TextEditor from './Pages/TextEditor/TextEditor'
+import WebsiteMoreDetails from './Pages/WebsiteContent/WebsiteMoreDetails'
 
 const App = () => {
   return (
@@ -84,6 +85,7 @@ const App = () => {
           <Route path='/add' element={<AddOperatorPage/>} />
           <Route path='/website-content' element={<WebsiteContent />} />
           <Route path='/website-content/details/:name' element={<WebsiteDetails/>} />
+          <Route path='/website-content/child' element={<WebsiteMoreDetails/>} />
           <Route path='/discount' element={<DiscountManager/>} />
           <Route path='/chart' element={<CityRateList/>} />
           <Route path='/website-content/about' element={<AboutContent />} />
@@ -135,7 +137,8 @@ const App = () => {
           <Route path='/carBookings/:id' element={<CarBookDetails/>} />
 
           <Route path='/booking' element={<MainForm/>} />
-
+          
+          <Route path='/text-editor' element={<TextEditor/>} />
 
           {/* car list */}
         

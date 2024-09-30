@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import HomeLayout from '../../Layouts/HomeLayouts'
 import { FaHome, FaPlaceOfWorship } from 'react-icons/fa'
 import { MdContactPhone, MdOutlineRoundaboutRight, MdReviews } from 'react-icons/md'
@@ -58,11 +58,18 @@ const WebsiteContent = () => {
     ]
 
     const dispatch=useDispatch()
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [preData,setPreData]=useState()
 
 
     const {dynamicPage,loading,error}=useSelector((state)=>state.dynamic)
 
     console.log(dynamicPage);
+
+    const handleAddMainParent = () => {
+        setPreData({})
+        setIsModalOpen(true); // Open the modal when button is clicked
+      };
     
 
     const fetchData=async()=>{
@@ -79,10 +86,24 @@ const WebsiteContent = () => {
 
     return (
         <HomeLayout>
+               <div className="container mx-auto p-4">
+               <h1 className="text-2xl font-bold mb-4">
+          Content Manager Related To {"Pages"}
+        </h1>
+        {/* <div className="flex justify-end mb-4">
+          <button
+            className="bg-yellow-500 text-white px-4 py-2 rounded"
+            onClick={handleAddMainParent}
+          >
+            + Add New Section
+          </button>
+        </div> */}
             <div className='grid items-center justify-center grid-cols-1 gap-6 p-2 pt-6 pb-10 sm:p-4 md:p-4 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2'>
 
                 {dynamicPage.map((data, index) => <WebsiteContentCard data={data} key={index + 1} />)}
             </div>
+            </div>
+            
         </HomeLayout>
     )
 }
