@@ -66,9 +66,16 @@ export const addSections = createAsyncThunk(
         try {
             
             console.log(data);
+
+            const formData=new FormData()
+
+            formData.append("title",data?.title)
+            formData.append("description",data?.description)
+            formData.append("photo",data?.photo)
+            formData.append("page",data?.page)
             
             
-            const response = await axiosInstance1.post(`/dynamic/section`,data);
+            const response = await axiosInstance1.post(`/dynamic/section`,formData);
             console.log(response);
             
             toast.success(response.data.message);
@@ -79,6 +86,9 @@ export const addSections = createAsyncThunk(
         }
     }
 );
+
+
+
 export const addChild = createAsyncThunk(
     'discounts/section/chid',
     async ({data,child},{ rejectWithValue }) => {
@@ -86,10 +96,15 @@ export const addChild = createAsyncThunk(
             
             console.log(data);
             console.log(child);
+
+            const formData=new FormData()
+            formData.append("title",data?.title)
+            formData.append("description",data?.description)
+            formData.append("photo",data?.photo)
             
             
             
-            const response = await axiosInstance1.post(`/dynamic/child/${child}`,data);
+            const response = await axiosInstance1.post(`/dynamic/child/${child}`,formData);
             console.log(response);
             
             toast.success(response.data.message);

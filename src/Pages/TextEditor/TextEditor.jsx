@@ -56,7 +56,7 @@ const TextEditor = ({ onClose, initialData, saveData,page,child }) => { // Set a
       customField1,
       // customField2,
       // ordering,
-      attachment,
+      photo:attachment,
     };
 
     // Dispatch the updated data

@@ -82,8 +82,8 @@ const WebsiteMoreDetails = () => {
             <td className="px-4 py-2">{section.title}</td>
             <td className="px-4 py-2">{truncateDescription(section.description, 100)}</td>
             <td className="px-4 py-2 text-center">
-              {section.image ? (
-                <img src={section.image} alt={section.title} className="w-20 h-20 object-cover" />
+              {section?.photo ? (
+                <img src={section?.photo?.secure_url} alt={section.title} className="w-20 h-20 object-cover" />
               ) : (
                 <p>No Image</p>
               )}
