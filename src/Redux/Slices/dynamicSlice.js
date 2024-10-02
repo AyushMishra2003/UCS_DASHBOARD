@@ -1,195 +1,241 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axiosInstance1 from '../../Helper/axiosInstace1'; // Update the path as needed
-import { toast } from 'sonner';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axiosInstance1 from "../../Helper/axiosInstace1"; // Update the path as needed
+import { toast } from "sonner";
 
 const initialState = {
-    loading: false,
-    error: null,
-    dynamicPage:[],
-    sections:[],
-    specificSection:[],
-    openModel:false
- 
+  loading: false,
+  error: null,
+  dynamicPage: [],
+  sections: [],
+  specificSection: [],
+  inquiryList: [],
+  openModel: false,
 };
 
-
-
 export const getAllPages = createAsyncThunk(
-    'discounts/getCategory',
-    async (_,{ rejectWithValue }) => {
-        try {
-            
-            const response = await axiosInstance1.get(`/dynamic`);
-            console.log(response);
-            
-            toast.success(response.data.message);
-            return response.data;
-        } catch (error) {
-            toast.error(error?.response?.data?.message || 'Failed to add discount');
-            return rejectWithValue(error.response.data);
-        }
+  "discounts/getCategory",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance1.get(`/dynamic`);
+      console.log(response);
+
+      toast.success(response.data.message);
+      return response.data;
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to add discount");
+      return rejectWithValue(error.response.data);
     }
+  }
 );
 
 export const getSections = createAsyncThunk(
-    'discounts/section',
-    async (name,{ rejectWithValue }) => {
-        try {
-            console.log(name);
-            
-            const response = await axiosInstance1.get(`/dynamic/${name}`);
-            console.log(response);
-            
-            toast.success(response.data.message);
-            return response.data;
-        } catch (error) {
-            toast.error(error?.response?.data?.message || 'Failed to add discount');
-            return rejectWithValue(error.response.data);
-        }
+  "discounts/section",
+  async (name, { rejectWithValue }) => {
+    try {
+      console.log(name);
+
+      const response = await axiosInstance1.get(`/dynamic/${name}`);
+      console.log(response);
+
+      toast.success(response.data.message);
+      return response.data;
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to add discount");
+      return rejectWithValue(error.response.data);
     }
+  }
 );
 
 export const modelOpen = createAsyncThunk(
-    'discounts/section',
-    async (_,{ rejectWithValue }) => {
-            console.log("model open called");
-            console.log(openModel);
-            openModel=!openModel
-            console.log(openModel);
-            
-    }
+  "discounts/section",
+  async (_, { rejectWithValue }) => {
+    console.log("model open called");
+    console.log(openModel);
+    openModel = !openModel;
+    console.log(openModel);
+  }
 );
 
 export const addSections = createAsyncThunk(
-    'discounts/section',
-    async (data,{ rejectWithValue }) => {
-        try {
-            
-            console.log(data);
+  "discounts/section",
+  async (data, { rejectWithValue }) => {
+    try {
+      console.log(data);
 
-            const formData=new FormData()
+      const formData = new FormData();
 
-            formData.append("title",data?.title)
-            formData.append("description",data?.description)
-            formData.append("photo",data?.photo)
-            formData.append("page",data?.page)
-            
-            
-            const response = await axiosInstance1.post(`/dynamic/section`,formData);
-            console.log(response);
-            
-            toast.success(response.data.message);
-            return response.data;
-        } catch (error) {
-            toast.error(error?.response?.data?.message || 'Failed to add Section');
-            return rejectWithValue(error.response.data);
-        }
+      formData.append("title", data?.title);
+      formData.append("description", data?.description);
+      formData.append("photo", data?.photo);
+      formData.append("page", data?.page);
+
+      const response = await axiosInstance1.post(`/dynamic/section`, formData);
+      console.log(response);
+
+      toast.success(response.data.message);
+      return response.data;
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to add Section");
+      return rejectWithValue(error.response.data);
     }
+  }
 );
 
+export const getInquiry = createAsyncThunk(
+  "discounts/inquiry",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance1.get(`/inquiry`);
+      console.log(response);
 
+      toast.success(response.data.message);
+      return response.data;
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to add Section");
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const deleteInquiry = createAsyncThunk(
+  "discounts/inquiry",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance1.delete(`/inquiry/${id}`);
+      console.log(response);
+
+      toast.success(response.data.message);
+      return response.data;
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to add Section");
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const deleteAllInquiry = createAsyncThunk(
+  "discounts/All/Inquiry",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance1.delete(`/inquiry/delete/all`);
+      console.log(response);
+
+      toast.success(response.data.message);
+      return response.data;
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to add Section");
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
 export const addChild = createAsyncThunk(
-    'discounts/section/chid',
-    async ({data,child},{ rejectWithValue }) => {
-        try {
-            
-            console.log(data);
-            console.log(child);
+  "discounts/section/chid",
+  async ({ data, child }, { rejectWithValue }) => {
+    try {
+      console.log(data);
+      console.log(child);
 
-            const formData=new FormData()
-            formData.append("title",data?.title)
-            formData.append("description",data?.description)
-            formData.append("photo",data?.photo)
-            
-            
-            
-            const response = await axiosInstance1.post(`/dynamic/child/${child}`,formData);
-            console.log(response);
-            
-            toast.success(response.data.message);
-            return response.data;
-        } catch (error) {
-            toast.error(error?.response?.data?.message || 'Failed to add Section');
-            return rejectWithValue(error.response.data);
-        }
+      const formData = new FormData();
+      formData.append("title", data?.title);
+      formData.append("description", data?.description);
+      formData.append("photo", data?.photo);
+
+      const response = await axiosInstance1.post(
+        `/dynamic/child/${child}`,
+        formData
+      );
+      console.log(response);
+
+      toast.success(response.data.message);
+      return response.data;
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to add Section");
+      return rejectWithValue(error.response.data);
     }
+  }
 );
 
 export const getSpecificSection = createAsyncThunk(
-    'discounts/specificSection',
-    async (data,{ rejectWithValue }) => {
-        try {
-            console.log(data);
-            
-            const response = await axiosInstance1.post(`/dynamic/get/section`,data);
-            console.log(response);
-            
-            toast.success(response.data.message);
-            return response.data;
-        } catch (error) {
-            toast.error(error?.response?.data?.message || 'Failed to add discount');
-            return rejectWithValue(error.response.data);
-        }
+  "discounts/specificSection",
+  async (data, { rejectWithValue }) => {
+    try {
+      console.log(data);
+
+      const response = await axiosInstance1.post(`/dynamic/get/section`, data);
+      console.log(response);
+
+      toast.success(response.data.message);
+      return response.data;
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to add discount");
+      return rejectWithValue(error.response.data);
     }
+  }
 );
 
-
-
-
-
-
-
-
 const dynamicSlice = createSlice({
-    name: 'dynamicList',
-    initialState,
-    reducers: {},
-    extraReducers: (builder) => {
-      builder
+  name: "dynamicList",
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
       .addCase(getAllPages.pending, (state) => {
         state.loading = true;
         state.error = null;
-    })
-    .addCase(getSections.pending, (state) => {
+      })
+      .addCase(getSections.pending, (state) => {
         state.loading = true;
         state.error = null;
-    })
-    .addCase(getSpecificSection.pending, (state) => {
+      })
+      .addCase(getSpecificSection.pending, (state) => {
         state.loading = true;
         state.error = null;
-    })
-    .addCase(getAllPages.fulfilled, (state, action) => {
+      })
+      .addCase(getInquiry.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAllPages.fulfilled, (state, action) => {
         state.loading = false;
-        state.dynamicPage= action?.payload?.data;
-    })
-    .addCase(getSections.fulfilled, (state, action) => {
+        state.dynamicPage = action?.payload?.data;
+      })
+      .addCase(getSections.fulfilled, (state, action) => {
         console.log(action);
-        
+
         state.loading = false;
-        state.sections= action?.payload?.sections;
-    })
-    .addCase(getSpecificSection.fulfilled, (state, action) => {
+        state.sections = action?.payload?.sections;
+      })
+      .addCase(getSpecificSection.fulfilled, (state, action) => {
         console.log(action);
-        
+
         state.loading = false;
-        state.specificSection= action?.payload?.section?.children;
+        state.specificSection = action?.payload?.section?.children;
         console.log(state.specificSection);
-        
-    })
-    .addCase(getAllPages.rejected, (state, action) => {
+      })
+      .addCase(getInquiry.fulfilled, (state, action) => {
+        console.log(action);
+
+        state.loading = false;
+        state.inquiryList = action?.payload?.data;
+      })
+      .addCase(getAllPages.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-    })
-    .addCase(getSections.rejected, (state, action) => {
+      })
+      .addCase(getSections.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-    })
-    .addCase(getSpecificSection.rejected, (state, action) => {
+      })
+      .addCase(getSpecificSection.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-    })
-    },
+      })
+      .addCase(getInquiry.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+  },
 });
 
-export default  dynamicSlice.reducer;
+export default dynamicSlice.reducer;

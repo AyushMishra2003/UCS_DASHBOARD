@@ -69,6 +69,7 @@ import MarketingComponent from './Layouts/Demo'
 import WebsiteDetails from './Pages/WebsiteContent/WebsiteDetails'
 import TextEditor from './Pages/TextEditor/TextEditor'
 import WebsiteMoreDetails from './Pages/WebsiteContent/WebsiteMoreDetails'
+import InquiryDetail from './Pages/Inquiry/InquiryDetail'
 
 const App = () => {
   return (
@@ -164,6 +165,7 @@ const App = () => {
 
 
            <Route path='/inquiry' element={<Inquiry/>} />
+             <Route path='/inquiry/detail' element={<InquiryDetail/>} />
 
 
 
