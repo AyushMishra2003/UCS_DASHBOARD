@@ -9,6 +9,7 @@ const initialState = {
   sections: [],
   specificSection: [],
   inquiryList: [],
+  vendorList:[],
   openModel: false,
 };
 
@@ -174,6 +175,57 @@ export const getSpecificSection = createAsyncThunk(
   }
 );
 
+
+export const getVendor = createAsyncThunk(
+  "discounts/vendor",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance1.get(`/vendor`);
+      console.log(response);
+
+      toast.success(response.data.message);
+      return response.data;
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to Get Vendor");
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const deleteVendor = createAsyncThunk(
+  "discounts/vendor",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance1.delete(`/vendor/${id}`);
+      console.log(response);
+
+      toast.success(response.data.message);
+      return response.data;
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to add Section");
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const addVendor = createAsyncThunk(
+  "discounts/section",
+  async (vendorData, { rejectWithValue }) => {
+    try {
+
+      const response = await axiosInstance1.post(`/vendor`, vendorData);
+      console.log(response);
+
+      toast.success(response.data.message);
+      return response.data;
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to add Section");
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+
 const dynamicSlice = createSlice({
   name: "dynamicList",
   initialState,
@@ -193,6 +245,10 @@ const dynamicSlice = createSlice({
         state.error = null;
       })
       .addCase(getInquiry.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getVendor.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
@@ -219,6 +275,14 @@ const dynamicSlice = createSlice({
         state.loading = false;
         state.inquiryList = action?.payload?.data;
       })
+      .addCase(getVendor.fulfilled, (state, action) => {
+        console.log(action);
+
+        state.loading = false;
+        state.vendorList = action?.payload?.data;
+        console.log(state.vendorList);
+        
+      })
       .addCase(getAllPages.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
@@ -232,6 +296,10 @@ const dynamicSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(getInquiry.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(getVendor.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

@@ -70,6 +70,9 @@ import WebsiteDetails from './Pages/WebsiteContent/WebsiteDetails'
 import TextEditor from './Pages/TextEditor/TextEditor'
 import WebsiteMoreDetails from './Pages/WebsiteContent/WebsiteMoreDetails'
 import InquiryDetail from './Pages/Inquiry/InquiryDetail'
+import VendorList from './Pages/VendorList/VendorList'
+import VendorDetails from './Pages/VendorList/VendorDetails'
+import AddVendor from './Pages/VendorList/AddVendor'
 
 const App = () => {
   return (
@@ -162,20 +165,12 @@ const App = () => {
            <Route path='/customer' element={<Customer/>} />
            <Route path='/edit/customer' element={<EditCustomer/>} />
            <Route path='/customer/detail' element={<CustomerDetail/>} />
-
-
            <Route path='/inquiry' element={<Inquiry/>} />
              <Route path='/inquiry/detail' element={<InquiryDetail/>} />
-
-
-
+             <Route path='/vendor' element={<VendorList/>} />
+             <Route path='/vendor/details' element={<VendorDetails/>} />
+             <Route path='/vendor/add' element={<AddVendor/>} />
            <Route path='/demo' element={<MarketingComponent/>} />
-
-
-
-
-
-
         </Route>
 
       </Routes>

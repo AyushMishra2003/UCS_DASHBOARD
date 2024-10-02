@@ -322,6 +322,12 @@ const HomeLayout = ({ children }) => {
                                      Local Search
                                 </NavLink>
                             </li> */}
+                               <li>
+                                <NavLink to={'/vendor'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                    <FaPersonCircleQuestion />
+                                    Vendor List
+                                </NavLink>
+                            </li>
                             <li>
                                 <NavLink to={'/inquiry'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
                                     <FaPersonCircleQuestion />
