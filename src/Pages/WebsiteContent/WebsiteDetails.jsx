@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSections, modelOpen } from '../../Redux/Slices/dynamicSlice';
 import TextEditor from '../TextEditor/TextEditor';
+import { FaEdit, FaEye } from 'react-icons/fa';
 
 const WebsiteDetails = () => {
   const { name } = useParams();
@@ -91,16 +92,16 @@ const WebsiteDetails = () => {
         </td>
         <td className="px-4 py-2 text-center flex gap-3">
           <button
-            className="bg-blue-500 text-white px-2 py-1 rounded"
+            className="bg-[#22C55E] text-white px-2 py-1 rounded"
             onClick={() => handleAddNew(section)}
           >
-            Edit
+            <FaEdit/>
           </button>
           <button
-            className="bg-blue-500 text-white px-2 py-1 rounded"
+            className="bg-[#22C55E] text-white px-2 py-1 rounded"
             onClick={() => handleView(section)}
           >
-            View More
+            <FaEye/>
           </button>
         </td>
       </tr>
@@ -115,7 +116,7 @@ const WebsiteDetails = () => {
         </h1>
         <div className="flex justify-end mb-4">
           <button
-            className="bg-yellow-500 text-white px-4 py-2 rounded"
+            className="bg-[#22C55E] text-white px-4 py-2 rounded"
             onClick={handleAddMainParent}
           >
             + Add New Section

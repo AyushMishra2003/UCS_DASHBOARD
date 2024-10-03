@@ -45,7 +45,7 @@ const CarOrders = () => {
     const [filterTripType, setFilterTripType] = useState('All');
     const [filterDateFrom, setFilterDateFrom] = useState('');
     const [filterDateTo, setFilterDateTo] = useState('');
-    const [searchCustomerEmail, setSearchCustomerEmail] = useState('');
+    const [searchCustomerPhone, setSearchCustomerPhone] = useState('');
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(true);
@@ -87,9 +87,9 @@ const CarOrders = () => {
         }
     
         // Filter by customer email search term
-        if (searchCustomerEmail) {
+        if (searchCustomerPhone) {
             filteredData = filteredData.filter(order =>
-                order.userId?.email.toLowerCase().includes(searchCustomerEmail.toLowerCase())
+                order.userId?.phoneNumber.includes(searchCustomerPhone)
             );
         }
     
@@ -114,13 +114,13 @@ const CarOrders = () => {
         <HomeLayout>
             <div className='flex flex-col xl:flex-row items-start justify-between gap-4 p-4 mt-4 bg-white rounded shadow-[0px_0px_10px_#8080807e]'>
                 <div className='flex flex-col w-full xl:w-1/2'>
-                    <label className='mb-1 text-black'>Search by Customer Email</label>
+                    <label className='mb-1 text-black'>Search by Phone Number</label>
                     <input
                         type='text'
-                        value={searchCustomerEmail}
-                        onChange={(e) => setSearchCustomerEmail(e.target.value)}
+                        value={searchCustomerPhone}
+                        onChange={(e) => setSearchCustomerPhone(e.target.value)}
                         className='bg-white shadow-[0px_0px_15px_#95959577_inset] outline-none text-black rounded p-2 w-full'
-                        placeholder='Search by email'
+                        placeholder='Search by Phone Number'
                     />
                 </div>
                 <div className='flex flex-col w-full xl:w-1/2'>

@@ -4,6 +4,7 @@ import { getSpecificSection } from '../../Redux/Slices/dynamicSlice'
 import { useLocation } from 'react-router-dom'
 import HomeLayout from '../../Layouts/HomeLayouts'
 import TextEditor from '../TextEditor/TextEditor'
+import { FaEdit } from 'react-icons/fa'
 
 const WebsiteMoreDetails = () => {
   
@@ -93,7 +94,7 @@ const WebsiteMoreDetails = () => {
                 className="bg-blue-500 text-white px-2 py-1 rounded"
                 onClick={() => handleAddNew(section)}
               >
-                Edit
+                <FaEdit/>
               </button>
               {/* <button
                 className="bg-blue-500 text-white px-2 py-1 rounded"
@@ -118,7 +119,7 @@ const WebsiteMoreDetails = () => {
         </h1>
         <div className="flex justify-end mb-4">
           <button
-            className="bg-yellow-500 text-white px-4 py-2 rounded"
+            className="bg-[#22C55E] text-white px-4 py-2 rounded"
             onClick={handleAddMainParent}
           >
             + Add New Section

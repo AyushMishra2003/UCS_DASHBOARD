@@ -86,8 +86,9 @@ const TextEditor = ({ onClose, initialData, saveData,page,child }) => { // Set a
    
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-3xl w-full relative" style={{ maxHeight: '80vh', overflowY: 'auto' }}>
+    <div className='relative bg-black full h-full z-50'>
+    <div className="absolute  bg-black z-50 w-full h-full flex items-center justify-center">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full relative top-[0.2rem] overflow-y-auto max-h-[85vh]" >
         <button
           className="absolute top-3 right-3 text-gray-600 hover:text-black"
           onClick={onClose} // Use the prop to close modal
@@ -97,12 +98,12 @@ const TextEditor = ({ onClose, initialData, saveData,page,child }) => { // Set a
 
         <h2 className="text-2xl font-bold mb-4">Edit Description</h2>
 
-        <div className="mb-4 bg-white">
+        <div className="mb-4 bg-white text-black">
           <label className="block text-gray-700 mb-2">Category</label>
           <select
             value={category}
             onChange={handleCategoryChange}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded bg-white"
           >
             <option value="page">{page}</option>
             {/* <option value="page">{page}</option> */}
@@ -186,6 +187,7 @@ const TextEditor = ({ onClose, initialData, saveData,page,child }) => { // Set a
           </button>
         </div>
       </div>
+    </div>
     </div>
   );
 };

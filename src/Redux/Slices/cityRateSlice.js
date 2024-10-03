@@ -15,7 +15,11 @@ export const fetchRates = createAsyncThunk(
     'cityRates/fetchRates',
     async (_, { rejectWithValue }) => {
         try {
+            console.log("fetch One way rates");
+            
             const response = await axiosInstance1.get('/city/rate');
+            console.log(response.data);
+            
             return response.data;
         } catch (error) {
             toast.error(error?.response?.data?.message || 'Failed to fetch rates');
@@ -130,6 +134,8 @@ const cityRateSlice = createSlice({
                 state.error = null;
             })
             .addCase(fetchRates.fulfilled, (state, action) => {
+                console.log(action);
+                
                 state.loading = false;
                 state.rates = action.payload.data;
             })

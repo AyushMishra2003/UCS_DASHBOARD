@@ -133,7 +133,7 @@ const AirportRate = () => {
 
         <h2 className="text-2xl mb-4">Select City</h2>
         <div className='flex items-center justify-between'>
-          <select value={selectedCityId} onChange={handleCityChange} className="border p-2 mb-4">
+          <select value={selectedCityId} onChange={handleCityChange} className="border p-2 mb-4 bg-white">
             <option value="">Select a city</option>
             {airpotRates.map(city => (
               <option key={city._id} value={city._id}>
@@ -159,7 +159,7 @@ const AirportRate = () => {
         {selectedCityId && (
           <>
             <h2 className="text-2xl mb-4">Select Category</h2>
-            <select value={selectedCategoryId} onChange={handleCategoryChange} className="border p-2 mb-4">
+            <select value={selectedCategoryId} onChange={handleCategoryChange} className="border p-2 mb-4 bg-white">
               <option value="">Select a category</option>
               {categoryList.map(category => (
                 <option key={category._id} value={category._id}>
@@ -250,7 +250,7 @@ const AirportRate = () => {
   <select
     value={newRate.kilometer}
     onChange={(e) => setNewRate({ ...newRate, kilometer: e.target.value })}
-    className="border p-2"
+    className="border p-2 bg-white"
   >
     <option value="" disabled>
       Select Kilometer

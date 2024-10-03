@@ -102,7 +102,7 @@ const LocalChartRate = () => {
           <select
             value={selectedCity}
             onChange={(e) => setSelectedCity(e.target.value)}
-            className="border p-2 flex-1"
+            className="border p-2 flex-1 bg-white"
           >
             <option value="">Select a City</option>
             {allCityRate.map((city) => (

@@ -7,14 +7,8 @@ import { getCategory } from '../../Redux/Slices/CategorySlice';
 
 const CityRateList = () => {
     const dispatch = useDispatch();
-    const { rates = [], loading, error } = useSelector(state => state.cityRates);
-
-
-    
+    const { rates , loading, error } = useSelector(state => state.cityRates);
     const { categoryList } = useSelector((state) => state.category);
-
-
-
     const [newRate, setNewRate] = useState({ fromCity: '', toCity: '', rate: '', category: '', extraKm: '' });
     const [editRate, setEditRate] = useState(null);
     const [selectedFromCity, setSelectedFromCity] = useState('');
@@ -25,16 +19,30 @@ const CityRateList = () => {
     const [currentLocation, setCurrentLocation] = useState(null);
     const [newLocation, setNewLocation] = useState({ fromCity: '', toCity: '' });
     const [active,setActive]=useState(false)
+    
+    const fetchCityRates=async()=>{
+        console.log("i am calling");
+        
+       const response= await dispatch(fetchRates()); 
+       console.log("city rates is",response);    
+    }
 
     const fetchData = async () => {
         await dispatch(getCategory("oneway"));
     };
 
+ 
+    
+    useEffect(()=>{
+        fetchCityRates() 
+    },[dispatch])
+
     useEffect(() => {
         fetchData();
-        dispatch(fetchRates());
-        setActive(false)
-    }, [dispatch,active]);
+        // setActive(false)
+    }, [dispatch]);
+
+
 
     const handleAddRate = () => {
         console.log(newRate);
@@ -77,15 +85,9 @@ const CityRateList = () => {
     };
 
     const handleDeleteRate=async(fromCity,toCity,category)=>{
-
-  
-
         const response=await dispatch(deleteRate({fromCity,toCity,category}))
         console.log(response);
-        dispatch(fetchRates())
-        
-        
-        
+        dispatch(fetchRates())    
     }
 
     const handleEditCategoryRate = (fromCity, toCity, category, rate,extraKm) => {
@@ -101,10 +103,12 @@ const CityRateList = () => {
     // }
    
     console.log(rates);
+    console.log(categoryList);
     
 
 
-    const filteredRates = (rates || [])?.filter(rate =>
+
+    const filteredRates = (rates)?.filter(rate =>
         (!selectedFromCity || rate.fromCity === selectedFromCity) &&
         (!selectedToCity || rate.toCity === selectedToCity)
     );
@@ -112,11 +116,9 @@ const CityRateList = () => {
     // Check if a rate is selected
     const isRateSelected = filteredRates.length > 0;
 
-    if (error) return <div className="text-center text-red-600">{error}</div>;
-    if (loading) return <div className="text-center text-blue-600">Loading...</div>;
+    if (error) return <HomeLayout> <div className="text-center text-red-600">{error}</div> </HomeLayout>;
+    if (loading) return  <HomeLayout><div className="text-center text-blue-600">Loading...</div> </HomeLayout>  ;
 
-    console.log(filteredRates);
-    
 
     return (
         <HomeLayout>
@@ -127,7 +129,7 @@ const CityRateList = () => {
                     <select
                         value={selectedFromCity}
                         onChange={(e) => setSelectedFromCity(e.target.value)}
-                        className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="border border-gray-300 p-3 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                         <option value="">Select From City</option>
                         {[...new Set(rates.map(rate => rate.fromCity))].map((city, index) => (
@@ -137,7 +139,7 @@ const CityRateList = () => {
                     <select
                         value={selectedToCity}
                         onChange={(e) => setSelectedToCity(e.target.value)}
-                        className="border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="border border-gray-300 p-3 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                         <option value="">Select To City</option>
                         {[...new Set(rates.map(rate => rate.toCity))].map((city, index) => (
@@ -272,7 +274,7 @@ const CityRateList = () => {
                                 <select
                                     value={newRate.category}
                                     onChange={(e) => setNewRate({ ...newRate, category: e.target.value })}
-                                    className="border border-gray-300 p-3 rounded-md w-full"
+                                    className="border border-gray-300 p-3 rounded-md w-full bg-white"
                                 >
                                     <option value="">Select Category</option>
                                     {categoryList.map((category, index) => (
@@ -290,7 +292,7 @@ const CityRateList = () => {
                                 />
                             </div>
                             <div className="mb-4">
-                                <label className="block text-gray-700 mb-2">Extra Km 123</label>
+                                <label className="block text-gray-700 mb-2">Extra Km</label>
                                 <input
                                     type="number"
                                     value={newRate.extraKm}

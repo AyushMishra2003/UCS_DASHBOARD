@@ -11,9 +11,11 @@ const initialState = {
 
 // Async thunks
 export const fetchLocalRates = createAsyncThunk(
-    'cityRates/fetchRates',
+    'LocalRates/fetchRates',
     async (_, { rejectWithValue }) => {
         try {
+            console.log("fetch local rates");
+            
             const response = await axiosInstance1.get('/local/getRate');
             return response.data;
         } catch (error) {

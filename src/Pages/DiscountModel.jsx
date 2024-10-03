@@ -39,7 +39,7 @@ const DiscountModal = ({ showModal, modalData, setModalData, handleSaveDiscount,
                             <select
                                 value={modalData.tripType}
                                 onChange={(e) => setModalData({ ...modalData, tripType: e.target.value })}
-                                className="w-full border border-gray-300 p-2 rounded"
+                                className="w-full border border-gray-300 p-2 rounded bg-white"
                                 required
                             >
                                 <option value="">Select Trip Type</option>
@@ -88,7 +88,7 @@ const DiscountModal = ({ showModal, modalData, setModalData, handleSaveDiscount,
                                 setModalData({ ...modalData, discountType: value });
                                 setIsPercentage(value === 1);
                             }}
-                            className="w-full border border-gray-300 p-2 rounded"
+                            className="w-full border border-gray-300 p-2 rounded bg-white"
                             required
                         >
                             <option value={1}>Percentage</option>
@@ -106,7 +106,7 @@ const DiscountModal = ({ showModal, modalData, setModalData, handleSaveDiscount,
                                 setModalData({ ...modalData, discountApplication: value });
                                 setIsCurrentBooking(value === 2);
                             }}
-                            className="w-full border border-gray-300 p-2 rounded"
+                            className="w-full border border-gray-300 p-2 rounded bg-white"
                             required
                         >
                             <option value={1}>Next Booking</option>
@@ -132,7 +132,7 @@ const DiscountModal = ({ showModal, modalData, setModalData, handleSaveDiscount,
                         <select
                             value={modalData.expiryTime || ''} // Empty string if undefined
                             onChange={handleTimeChange}
-                            className="w-full border border-gray-300 p-2 rounded"
+                            className="w-full border border-gray-300 p-2 rounded  bg-white"
                             required
                         >
                             <option value="">Select Time</option>
