@@ -97,7 +97,7 @@ const TextEditor = ({ onClose, initialData, saveData,page,child }) => { // Set a
 
         <h2 className="text-2xl font-bold mb-4">Edit Description</h2>
 
-        <div className="mb-4">
+        <div className="mb-4 bg-white">
           <label className="block text-gray-700 mb-2">Category</label>
           <select
             value={category}

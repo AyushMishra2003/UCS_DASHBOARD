@@ -87,7 +87,7 @@ const WebsiteContent = () => {
     return (
         <HomeLayout>
                <div className="container mx-auto p-4">
-               <h1 className="text-2xl font-bold mb-4">
+               <h1 className="text-2xl md:text-3xl font-semibold  mb-4 text-center">
           Content Manager Related To {"Pages"}
         </h1>
         {/* <div className="flex justify-end mb-4">

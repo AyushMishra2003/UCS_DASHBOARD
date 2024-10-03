@@ -14,7 +14,7 @@ const WebsiteContentCard = ({data }) => {
         <div className={`flex flex-col relative z-[100] h-[14rem] justify-between items-center p-8 pb-4 border border-gray-300 bg-[#655CCE] rounded-xl shadow-lg hover:shadow-xl transform transition-all hover:-translate-y-1 hover:scale-102  backdrop-blur-lg `}>
             <div className='text-[3rem] mt-2 text-white flex items-center gap-4'>
                 {/* {icon} */}
-                <h1 className='text-[2.2rem]  text-black'>
+                <h1 className='text-[1.6rem] md:text-[2rem] font-semibold  text-white'>
                     {data.name}
                 </h1>
             </div>

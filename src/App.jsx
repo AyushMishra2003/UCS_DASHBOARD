@@ -73,6 +73,7 @@ import InquiryDetail from './Pages/Inquiry/InquiryDetail'
 import VendorList from './Pages/VendorList/VendorList'
 import VendorDetails from './Pages/VendorList/VendorDetails'
 import AddVendor from './Pages/VendorList/AddVendor'
+import Demo from './Pages/Inquiry/Demo'
 
 const App = () => {
   return (
@@ -170,7 +171,7 @@ const App = () => {
              <Route path='/vendor' element={<VendorList/>} />
              <Route path='/vendor/details' element={<VendorDetails/>} />
              <Route path='/vendor/add' element={<AddVendor/>} />
-           <Route path='/demo' element={<MarketingComponent/>} />
+           <Route path='/demo' element={<Demo/>} />
         </Route>
 
       </Routes>
