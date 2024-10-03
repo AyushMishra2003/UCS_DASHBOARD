@@ -3,11 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { deleteCategoryList, getCategory, updateCategoryList } from '../../Redux/Slices/CategorySlice';
 import HomeLayout from '../../Layouts/HomeLayouts';
 import { FiEdit, FiTrash } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaSpinner } from 'react-icons/fa';
+import { FiPlus } from 'react-icons/fi';
 
 const CategoryList = () => {
   const dispatch = useDispatch();
+  const navigate=useNavigate()
   
   const [tripType, setTripType] = useState('local');
   const [isLoading, setIsLoading] = useState(false);
@@ -33,6 +35,11 @@ const CategoryList = () => {
 
   const handleDelete = async(categoryId) => {
     console.log(`Deleting category: ${categoryId}`);
+     const confirmDelete = window.confirm(`Are you sure you want to delete Cab`);
+  if (!confirmDelete) {
+    return; // Exit if the user cancels the deletion
+  }
+
     const response=await dispatch(deleteCategoryList({categoryId,tripType}))
     dispatch(getCategory(tripType))
   };
@@ -85,10 +92,16 @@ const CategoryList = () => {
             </select>
           </div>
           <div>
-            <Link to={"/add/category"} className='px-2 py-2 border-none bg-white text-black'>
+            {/* <Link to={"/add/category"} className='px-2 py-2 border-none bg-white text-black'>
               Add Category
-            </Link>
+            </Link> */}
           </div>
+          <div className="flex justify-end mb-4">
+          <button className="bg-green-500 text-white px-4 py-2 rounded flex items-center"  onClick={() => navigate('/add/category')}>
+            <FiPlus className="mr-2" />
+            Add Category
+          </button>
+        </div>
         </div>
 
         {loading ? (
