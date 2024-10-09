@@ -115,7 +115,7 @@ const DiscountManager = () => {
     );
     if (error) return <div>Error: {error.message}</div>;
 
-    console.log(discounts);
+
 
     return (
         <HomeLayout>
