@@ -11,7 +11,7 @@ const initialState = {
 
 
 export const addCategory = createAsyncThunk(
-    'discounts/addDiscount',
+    'category/addCategory',
     async (categoryData, { rejectWithValue }) => {
         try {
             console.log(categoryData);
@@ -35,7 +35,7 @@ export const addCategory = createAsyncThunk(
 );
 
 export const getCategory = createAsyncThunk(
-    'discounts/getCategory',
+    'category/getCategory',
     async ( tripType,{ rejectWithValue }) => {
         try {
             
@@ -64,7 +64,7 @@ export const getCategory = createAsyncThunk(
 );
 
 export const updateCategoryList = createAsyncThunk(
-    'discounts/updateCategory',
+    'category/updateCategory',
     async ( {updatedCategory,tripType},{ rejectWithValue }) => {
         try {
             
@@ -94,7 +94,7 @@ export const updateCategoryList = createAsyncThunk(
 );
 
 export const deleteCategoryList = createAsyncThunk(
-    'discounts/deleteCategory',
+    'category/deleteCategory',
     async ( {tripType,categoryId},{ rejectWithValue }) => {
         try {
             
@@ -144,7 +144,7 @@ export const addRoundRate = createAsyncThunk(
 );
 
 export const  deleteCategory = createAsyncThunk(
-    'discounts/deleteCategory',
+    'category/deleteCategory',
     async ( id,{ rejectWithValue }) => {
         try {
             
