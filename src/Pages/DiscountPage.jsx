@@ -80,6 +80,16 @@ const DiscountManager = () => {
             // Update existing discount
             const response = await dispatch(updateDiscount({ id, updateData })).unwrap();
             if (response?.payload) {
+                setModalData({
+                    id: null,
+                    tripType: '',
+                    discountValue: 0,
+                    discountType: 1, // Default to percentage
+                    discountApplication: 1, // Default to next booking
+                    expiryDate: '', // Reset expiryDate
+                    expiryTime: '', // Reset expiryTime,
+                    discountLimit:''
+                });
                 await dispatch(fetchDiscounts());
             }
         } else {

@@ -83,7 +83,7 @@ const CategoryList = () => {
             <select
               value={tripType}
               onChange={handleTripTypeChange}
-              className="border px-4 py-2 rounded"
+              className="border px-4 py-2 rounded bg-white"
             >
               <option value="oneway">Oneway</option>
               <option value="local">Local</option>

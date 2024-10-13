@@ -96,12 +96,12 @@ const Inquiry = () => {
             onChange={(e) => setFilterByPhone(e.target.value)}
             className="p-2 border rounded w-full md:w-1/3 md:ml-2"
           />
-          <input
+          {/* <input
             type="date"
             value={filterByDate}
             onChange={(e) => setFilterByDate(e.target.value)}
             className="p-2 border rounded w-full md:w-1/3 md:ml-2"
-          />
+          /> */}
         </div>
 
         {/* Delete All Button */}

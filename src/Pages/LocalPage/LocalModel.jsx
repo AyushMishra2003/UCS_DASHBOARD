@@ -77,8 +77,8 @@ const LocalCategoryModal = ({ isOpen, onClose, onAddCategory, selectedCity, data
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="border p-2 w-full mb-2"
-            aria-label="Select Category"
+            className="border p-2 w-full mb-2 bg-white"
+            aria-label="Select Category" 
           >
             <option value="">Select a Category</option>
             {data.map((category) => (

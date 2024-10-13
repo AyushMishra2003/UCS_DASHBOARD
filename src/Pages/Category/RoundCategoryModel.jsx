@@ -60,7 +60,7 @@ const RoundCategoryModal = ({ isOpen, onClose, onAddCategory, editingCategory, c
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          className={`border p-2 w-full mb-2 ${!selectedCategory && error && 'border-red-500'}`}
+          className={`border p-2 w-full mb-2 bg-white ${!selectedCategory && error && 'border-red-500'}`}
           aria-label="Select Category"
         >
           <option value="" disabled>Select Category</option>

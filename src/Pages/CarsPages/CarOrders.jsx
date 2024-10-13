@@ -40,7 +40,7 @@ const SkeletonLoader = () => {
     );
 };
 
-const CarOrders = () => {
+const CarOrders = ({data}) => {
     const [filterStatus, setFilterStatus] = useState('All');
     const [filterTripType, setFilterTripType] = useState('All');
     const [filterDateFrom, setFilterDateFrom] = useState('');
@@ -53,7 +53,7 @@ const CarOrders = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const orderData = useSelector((state) => state.carBooking.bookings) || [];
+    let orderData = useSelector((state) => state.carBooking.bookings) || [];
 
     const loadData = async () => {
         setLoading(true);
@@ -107,6 +107,14 @@ const CarOrders = () => {
 
      
     console.log(orderData);
+
+
+    console.log(data);
+
+    if(data){
+        orderData=data
+    }
+    
     
     
 

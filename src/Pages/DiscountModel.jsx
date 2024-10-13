@@ -52,96 +52,99 @@ const DiscountModal = ({ showModal, modalData, setModalData, handleSaveDiscount,
                         </div>
                     )}
 
-                    {/* Discount Value */}
-                    <div className="mb-4">
-                        <label className="block text-gray-700">Discount Value</label>
-                        <input
-                            type="number"
-                            value={modalData.discountValue || ''} // Empty string if undefined
-                            onChange={(e) => setModalData({ ...modalData, discountValue: e.target.value })}
-                            className="w-full border border-gray-300 p-2 rounded"
-                            required
-                            placeholder={isPercentage ? "Enter percentage" : "Enter amount"}
-                        />
-                    </div>
+                    {/* Use grid layout for even alignment */}
+                    <div className="grid grid-cols-2 gap-4">
+                        {/* Discount Value */}
+                        <div className="mb-4">
+                            <label className="block text-gray-700">Discount Value</label>
+                            <input
+                                type="number"
+                                value={modalData.discountValue || ''} // Empty string if undefined
+                                onChange={(e) => setModalData({ ...modalData, discountValue: e.target.value })}
+                                className="w-full border border-gray-300 p-2 rounded"
+                                required
+                                placeholder={isPercentage ? "Enter percentage" : "Enter amount"}
+                            />
+                        </div>
 
+                        {/* Discount Limit */}
+                        <div className="mb-4">
+                            <label className="block text-gray-700">Discount Limit</label>
+                            <input
+                                type="number"
+                                value={modalData.discountLimit || ''} // Empty string if undefined
+                                onChange={(e) => setModalData({ ...modalData, discountLimit: e.target.value })}
+                                className="w-full border border-gray-300 p-2 rounded"
+                                required
+                                placeholder={"Enter Discount Limit"}
+                            />
+                        </div>
 
-                    <div className="mb-4">
-                        <label className="block text-gray-700">Discount Limit</label>
-                        <input
-                            type="number"
-                            value={modalData.discountLimit || ''} // Empty string if undefined
-                            onChange={(e) => setModalData({ ...modalData, discountLimit: e.target.value })}
-                            className="w-full border border-gray-300 p-2 rounded"
-                            required
-                            placeholder={"Enter Discount Limit"}
-                        />
-                    </div>
+                        {/* Discount Type */}
+                        <div className="mb-4">
+                            <label className="block text-gray-700">Discount Type</label>
+                            <select
+                                value={modalData.discountType}
+                                onChange={(e) => {
+                                    const value = parseInt(e.target.value, 10);
+                                    setModalData({ ...modalData, discountType: value });
+                                    setIsPercentage(value === 1);
+                                }}
+                                className="w-full border border-gray-300 p-2 rounded bg-white"
+                                required
+                            >
+                                <option value={1}>Percentage</option>
+                                <option value={2}>Fixed Amount</option>
+                            </select>
+                        </div>
 
-                    {/* Discount Type */}
-                    <div className="mb-4">
-                        <label className="block text-gray-700">Discount Type</label>
-                        <select
-                            value={modalData.discountType}
-                            onChange={(e) => {
-                                const value = parseInt(e.target.value, 10);
-                                setModalData({ ...modalData, discountType: value });
-                                setIsPercentage(value === 1);
-                            }}
-                            className="w-full border border-gray-300 p-2 rounded bg-white"
-                            required
-                        >
-                            <option value={1}>Percentage</option>
-                            <option value={2}>Fixed Amount</option>
-                        </select>
-                    </div>
+                        {/* Booking Type */}
+                        <div className="mb-4">
+                            <label className="block text-gray-700">Booking Type</label>
+                            <select
+                                value={modalData.discountApplication}
+                                onChange={(e) => {
+                                    const value = parseInt(e.target.value, 10);
+                                    setModalData({ ...modalData, discountApplication: value });
+                                    setIsCurrentBooking(value === 2);
+                                }}
+                                className="w-full border border-gray-300 p-2 rounded bg-white"
+                                required
+                            >
+                                <option value={1}>Next Booking</option>
+                                <option value={2}>Current Booking</option>
+                            </select>
+                        </div>
 
-                    {/* Booking Type */}
-                    <div className="mb-4">
-                        <label className="block text-gray-700">Booking Type</label>
-                        <select
-                            value={modalData.discountApplication}
-                            onChange={(e) => {
-                                const value = parseInt(e.target.value, 10);
-                                setModalData({ ...modalData, discountApplication: value });
-                                setIsCurrentBooking(value === 2);
-                            }}
-                            className="w-full border border-gray-300 p-2 rounded bg-white"
-                            required
-                        >
-                            <option value={1}>Next Booking</option>
-                            <option value={2}>Current Booking</option>
-                        </select>
-                    </div>
+                        {/* Expiry Date */}
+                        <div className="mb-4">
+                            <label className="block text-gray-700">Expiry Date</label>
+                            <input
+                                type="date"
+                                value={modalData.expiryDate || ''} // Empty string if undefined
+                                onChange={(e) => setModalData({ ...modalData, expiryDate: e.target.value })}
+                                className="w-full border border-gray-300 p-2 rounded"
+                                required
+                            />
+                        </div>
 
-                    {/* Expiry Date */}
-                    <div className="mb-4">
-                        <label className="block text-gray-700">Expiry Date</label>
-                        <input
-                            type="date"
-                            value={modalData.expiryDate || ''} // Empty string if undefined
-                            onChange={(e) => setModalData({ ...modalData, expiryDate: e.target.value })}
-                            className="w-full border border-gray-300 p-2 rounded"
-                            required
-                        />
-                    </div>
-
-                    {/* Expiry Time */}
-                    <div className="mb-4">
-                        <label className="block text-gray-700">Expiry Time</label>
-                        <select
-                            value={modalData.expiryTime || ''} // Empty string if undefined
-                            onChange={handleTimeChange}
-                            className="w-full border border-gray-300 p-2 rounded  bg-white"
-                            required
-                        >
-                            <option value="">Select Time</option>
-                            {generateTimeOptions().map((time) => (
-                                <option key={time} value={time}>
-                                    {time}
-                                </option>
-                            ))}
-                        </select>
+                        {/* Expiry Time */}
+                        <div className="mb-4">
+                            <label className="block text-gray-700">Expiry Time</label>
+                            <select
+                                value={modalData.expiryTime || ''} // Empty string if undefined
+                                onChange={handleTimeChange}
+                                className="w-full border border-gray-300 p-2 rounded bg-white"
+                                required
+                            >
+                                <option value="">Select Time</option>
+                                {generateTimeOptions().map((time) => (
+                                    <option key={time} value={time}>
+                                        {time}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
 
                     <div className="flex justify-end">

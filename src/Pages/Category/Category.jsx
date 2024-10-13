@@ -147,7 +147,7 @@ const AddCategoryForm = () => {
                   name="tripType"
                   value={formData.tripType}
                   onChange={handleInputChange}
-                  className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
                 >
                   <option value="local">Local</option>
                   <option value="round">Round</option>

@@ -48,11 +48,14 @@ const VendorList = () => {
 
   const handleDelete = async(id) => {
     // Logic for deleting the vendor
-    console.log('Delete vendor with id:', id);
+    const isConfirmed = window.confirm('Are you sure you want to delete this vendor?');
+
+    if(isConfirmed){
     const response=await dispatch(deleteVendor(id))
     if(response?.payload){
        fetchData()
     }
+  }
   };
 
   const handleViewMore = (id) => {

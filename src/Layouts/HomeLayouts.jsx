@@ -14,7 +14,8 @@ import { PiUserList } from "react-icons/pi";
 import { FaSailboat, FaCircle, FaPersonCircleQuestion } from "react-icons/fa6";
 import { RiArrowRightSLine, RiArrowDownSLine } from "react-icons/ri";
 import { LuShoppingBag } from "react-icons/lu";
-
+import { FaRegMessage } from "react-icons/fa6";
+import { MdBoy } from "react-icons/md";
 const HomeLayout = ({ children }) => {
     const [active, setActive] = useState(false);
     const [dropdownActive, setDropdownActive] = useState(false);
@@ -106,12 +107,12 @@ const HomeLayout = ({ children }) => {
                                     Website content
                                 </NavLink>
                             </li>
-                            <li>
+                            {/* <li>
                                 <NavLink to={'/gallery'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
                                     <RiGalleryFill />
                                     Gallery
                                 </NavLink>
-                            </li>
+                            </li> */}
                             <li className='relative'>
                                 <div onClick={() => setDropdownActive(!dropdownActive)} className={`${listStyle} cursor-pointer flex items-center justify-between`}>
                                     <div className='flex items-center justify-start gap-2'>
@@ -292,7 +293,7 @@ const HomeLayout = ({ children }) => {
                             </li>
                             <li>
                                 <NavLink to={'/customer'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaSailboat />
+                                    <MdBoy/>
                                      Customer Details
                                 </NavLink>
                             </li>
@@ -330,8 +331,8 @@ const HomeLayout = ({ children }) => {
                             </li>
                             <li>
                                 <NavLink to={'/inquiry'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaPersonCircleQuestion />
-                                    Enquiry
+                                    <FaRegMessage/>
+                                    Inquiry List
                                 </NavLink>
                             </li>
 
