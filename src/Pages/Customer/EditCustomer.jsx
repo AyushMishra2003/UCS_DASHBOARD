@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { updateUser } from '../../Redux/Slices/discountSlice';
+import { getUser, updateUser } from '../../Redux/Slices/discountSlice';
 // import { updateUser } from '../../Redux/Slices/discountSlice';
 
 const EditCustomer = ({ user, onClose }) => {
@@ -33,6 +33,7 @@ const EditCustomer = ({ user, onClose }) => {
         const response=await dispatch(updateUser(formData))
         console.log(response);
         if(response?.payload){
+          dispatch(getUser());
             onClose(); // Close the form on successful update
         }
         
@@ -44,7 +45,7 @@ const EditCustomer = ({ user, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50 border border-red-500">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold mb-4">Edit User</h2>
         <form onSubmit={handleSubmit}>
@@ -83,7 +84,7 @@ const EditCustomer = ({ user, onClose }) => {
               name="isVerify"
               checked={formData.isVerify}
               onChange={handleChange}
-              className="mr-2"
+              className="mr-2 bg-white"
             />
             <label htmlFor="isVerify" className="text-gray-700 text-sm font-bold">
               Verified

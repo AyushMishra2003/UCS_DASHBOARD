@@ -1,5 +1,5 @@
 import React from 'react';
-import HomeLayout from '../../Layouts/HomeLayouts';
+import HomeLayout from '../../Layouts/HomeLayouts'
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const InquiryDetail = () => {
@@ -12,7 +12,7 @@ const InquiryDetail = () => {
     return (
       <HomeLayout>
         <div className="p-4">
-          <p>No inquiry details available</p>
+          <p className="text-center text-gray-500">No inquiry details available</p>
         </div>
       </HomeLayout>
     );
@@ -20,45 +20,50 @@ const InquiryDetail = () => {
 
   return (
     <HomeLayout>
-      <div className="p-4 max-w-2xl mx-auto bg-white shadow-md rounded-lg sm:mt-[5rem]">
-        <h2 className="text-2xl font-bold mb-4">Inquiry Details</h2>
-
-        {/* Back Button */}
-        <button
-          onClick={() => navigate(-1)} // Navigate back to the previous page
-          className="mb-4 text-blue-500"
-        >
-         Previous Page
-        </button>
-        
-        {/* Full Name */}
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold">Full Name:</h3>
-          <p className="text-gray-700">{inquiry.fullName}</p>
+      <div className="p-6 max-w-3xl mx-auto bg-white shadow-lg rounded-lg sm:mt-[5rem]">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-3xl font-bold text-indigo-600">Inquiry Details</h2>
+          
+          {/* Back Button */}
+          <button
+            onClick={() => navigate(-1)} // Navigate back to the previous page
+            className="px-4 py-2 bg-indigo-500 text-white font-semibold rounded-md hover:bg-indigo-600 transition"
+          >
+            Previous Page
+          </button>
         </div>
 
-        {/* Email */}
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold">Email:</h3>
-          <p className="text-gray-700">{inquiry.email}</p>
-        </div>
+        {/* Inquiry Information */}
+        <div className="space-y-6">
+          {/* Full Name */}
+          <div className="border-b pb-4">
+            <h3 className="text-lg font-semibold text-gray-700">Full Name:</h3>
+            <p className="text-gray-900">{inquiry.fullName}</p>
+          </div>
 
-        {/* Phone Number */}
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold">Phone Number:</h3>
-          <p className="text-gray-700">{inquiry.phoneNumber}</p>
-        </div>
+          {/* Email */}
+          <div className="border-b pb-4">
+            <h3 className="text-lg font-semibold text-gray-700">Email:</h3>
+            <p className="text-gray-900">{inquiry.email}</p>
+          </div>
 
-        {/* Message */}
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold">Message:</h3>
-          <p className="text-gray-700">{inquiry.message}</p>
-        </div>
+          {/* Phone Number */}
+          <div className="border-b pb-4">
+            <h3 className="text-lg font-semibold text-gray-700">Phone Number:</h3>
+            <p className="text-gray-900">{inquiry.phoneNumber}</p>
+          </div>
 
-        {/* Updated At */}
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold">Message Date:</h3>
-          <p className="text-gray-700">{new Date(inquiry.updatedAt).toLocaleDateString()}</p>
+          {/* Message */}
+          <div className="border-b pb-4">
+            <h3 className="text-lg font-semibold text-gray-700">Message:</h3>
+            <p className="text-gray-900">{inquiry.message}</p>
+          </div>
+
+          {/* Updated At */}
+          <div className="border-b pb-4">
+            <h3 className="text-lg font-semibold text-gray-700">Message Date:</h3>
+            <p className="text-gray-900">{new Date(inquiry.updatedAt).toLocaleDateString()}</p>
+          </div>
         </div>
       </div>
     </HomeLayout>

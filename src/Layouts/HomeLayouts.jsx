@@ -95,12 +95,12 @@ const HomeLayout = ({ children }) => {
                                     Dashboard
                                 </NavLink>
                             </li>
-                            <li>
+                            {/* <li>
                                 <NavLink to={'/global-settings'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
                                     <MdOutlineSettings />
                                     Global settings
                                 </NavLink>
-                            </li>
+                            </li> */}
                             <li>
                                 <NavLink to={'/website-content'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
                                     <MdContentPaste />
