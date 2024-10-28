@@ -85,9 +85,12 @@ const CityRateList = () => {
     };
 
     const handleDeleteRate=async(fromCity,toCity,category)=>{
+        const confirm=window.confirm("Are you sure,you want to delete")
+        if(confirm){
         const response=await dispatch(deleteRate({fromCity,toCity,category}))
         console.log(response);
-        dispatch(fetchRates())    
+        dispatch(fetchRates())   
+        } 
     }
 
     const handleEditCategoryRate = (fromCity, toCity, category, rate,extraKm) => {
