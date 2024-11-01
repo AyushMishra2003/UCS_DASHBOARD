@@ -54,7 +54,7 @@ const AddVendor = () => {
                 name="fullName"
                 value={vendorData.fullName}
                 onChange={handleChange}
-                className="mt-1 p-2 block w-full border border-gray-300  bg-white"
+                className="mt-1 p-2 block w-full border border-gray-300  bg-white text-black"
                 placeholder="Enter full name"
                 required
               />
@@ -67,7 +67,7 @@ const AddVendor = () => {
                 name="email"
                 value={vendorData.email}
                 onChange={handleChange}
-                className="mt-1 p-2 block w-full border border-gray-300 rounded bg-white"
+                className="mt-1 p-2 block w-full border border-gray-300 rounded bg-white text-black"
                 placeholder="Enter email"
                 required
               />
@@ -80,7 +80,7 @@ const AddVendor = () => {
                 name="phoneNumber"
                 value={vendorData.phoneNumber}
                 onChange={handleChange}
-                className="mt-1 p-2 block w-full border border-gray-300 rounded bg-white"
+                className="mt-1 p-2 block w-full border border-gray-300 rounded bg-white text-black"
                 placeholder="Enter phone number"
                 required
               />
@@ -93,7 +93,7 @@ const AddVendor = () => {
                 name="city"
                 value={vendorData.city}
                 onChange={handleChange}
-                className="mt-1 p-2 block w-full border border-gray-300 rounded bg-white"
+                className="mt-1 p-2 block w-full border border-gray-300 rounded bg-white text-black"
                 placeholder="Enter city"
                 required
               />
@@ -107,7 +107,7 @@ const AddVendor = () => {
               name="description"
               value={vendorData.description}
               onChange={handleChange}
-              className="mt-1 p-2 block w-full border border-gray-300 rounded bg-white"
+              className="mt-1 p-2 block w-full border border-gray-300 rounded bg-white text-black"
               placeholder="Enter description"
               rows="5"
               required

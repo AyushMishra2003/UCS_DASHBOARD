@@ -14,7 +14,7 @@ const AddCategoryForm = () => {
     photo: null,
     name: '',
     numberOfSeats: '',
-    acAvailable: false,
+    acAvailable: true,
     numberOfBags: '',
     tripType: 'local',
   });
