@@ -74,6 +74,9 @@ import VendorList from './Pages/VendorList/VendorList'
 import VendorDetails from './Pages/VendorList/VendorDetails'
 import AddVendor from './Pages/VendorList/AddVendor'
 import Demo from './Pages/Inquiry/Demo'
+import TermCondition from './Pages/TermCondition/TermCondition'
+import AddTermCondition from './Pages/TermCondition/AddTermCondition'
+import EditTermCondition from './Pages/TermCondition/EditTermCondition'
 
 const App = () => {
   return (
@@ -172,7 +175,14 @@ const App = () => {
              <Route path='/vendor/details' element={<VendorDetails/>} />
              <Route path='/vendor/add' element={<AddVendor/>} />
            <Route path='/demo' element={<Demo/>} />
+
+
+           <Route path='/view/term/condition' element={<TermCondition/>} />
+           <Route path='/add/term/condition' element={<AddTermCondition/>} />
+           <Route path='/edit/term/condition' element={<EditTermCondition/>} />
         </Route>
+
+
 
       </Routes>
     </div>

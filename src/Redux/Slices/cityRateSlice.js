@@ -7,7 +7,8 @@ const initialState = {
     error: null,
     rates: [],
     allrates:[],
-    roundCity:[]
+    roundCity:[],
+    termandCondition:[]
 };
 
 // Async thunks
@@ -119,6 +120,81 @@ export const specificCityRate = createAsyncThunk(
     }
 );
 
+export const allTermandCondition = createAsyncThunk(
+    'cityRates/term/condition',
+    async () => {
+        try {
+            console.log("hello");
+            
+            const response=await axiosInstance1.get(`/tc`);
+            toast.success('Term and Condition Get successfully');
+            return  response.data
+        } catch (error) {
+            toast.error(error?.response?.data?.message || 'Failed to delete rate');
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+
+export const addTermandCondition = createAsyncThunk(
+    'cityRates/add/term/condition',
+    async ({data}, { rejectWithValue }) => {
+        try {
+             
+            console.log(data);
+            
+            const response=await axiosInstance1.post(`/tc`,data);
+            console.log(response);
+            
+            toast.success('Term and Condition Get successfully');
+            return  response.data
+        } catch (error) {
+            toast.error(error?.response?.data?.message || 'Failed to delete rate');
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+export const deleteTermandCondition = createAsyncThunk(
+    'cityRates/delete/term/condition',
+    async ({data}, { rejectWithValue }) => {
+        try {
+             
+            console.log(data);
+            
+            const response=await axiosInstance1.post(`/tc/delete`,data);
+            toast.success('Term and Condition Delete successfully');
+            return  response.data
+        } catch (error) {
+            toast.error(error?.response?.data?.message || 'Failed to delete rate');
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+export const editTermandCondition = createAsyncThunk(
+    'cityRates/edit/term/condition',
+    async ({data}, { rejectWithValue }) => {
+        try {
+             
+            console.log(data);
+            
+            const response=await axiosInstance1.post(`/tc/update`,data);
+            toast.success('Term and Condition Edit successfully');
+            return  response.data
+        } catch (error) {
+            toast.error(error?.response?.data?.message || 'Failed to edit Tc');
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+
+
+
+
+
 const cityRateSlice = createSlice({
     name: 'cityRates',
     initialState,
@@ -130,6 +206,10 @@ const cityRateSlice = createSlice({
                 state.error = null;
             })
             .addCase(fetchRoundCity.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(allTermandCondition.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
@@ -147,6 +227,15 @@ const cityRateSlice = createSlice({
                 console.log(state.roundCity);
                 
             })
+            .addCase(allTermandCondition.fulfilled, (state, action) => {
+            
+                 console.log(action);
+                 
+                state.loading = false;
+                state.termandCondition = action?.payload?.data?.data;
+            
+                
+            })
             .addCase(fetchRates.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
@@ -154,6 +243,10 @@ const cityRateSlice = createSlice({
             .addCase(fetchRoundCity.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+            })
+            .addCase(allTermandCondition.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action?.payload;
             })
             .addCase(specificCityRate.fulfilled, (state, action) => {
                 state.loading = false;

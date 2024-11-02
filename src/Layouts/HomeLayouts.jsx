@@ -16,6 +16,8 @@ import { RiArrowRightSLine, RiArrowDownSLine } from "react-icons/ri";
 import { LuShoppingBag } from "react-icons/lu";
 import { FaRegMessage } from "react-icons/fa6";
 import { MdBoy } from "react-icons/md";
+import { CiViewList } from "react-icons/ci";
+
 const HomeLayout = ({ children }) => {
     const [active, setActive] = useState(false);
     const [dropdownActive, setDropdownActive] = useState(false);
@@ -335,6 +337,20 @@ const HomeLayout = ({ children }) => {
                                     Inquiry List
                                 </NavLink>
                             </li>
+
+                            <li>
+                                <NavLink to={'/view/term/condition'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                    <CiViewList/>
+                                    Term & Condition
+                                </NavLink>
+                            </li>
+
+                            {/* <li>
+                                <NavLink to={'/add/term/condition'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                    <FaRegMessage/>
+                                    Add Term & Condition
+                                </NavLink>
+                            </li> */}
 
                         </div>
                     </ul>
