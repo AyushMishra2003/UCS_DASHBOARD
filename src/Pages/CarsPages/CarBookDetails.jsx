@@ -48,6 +48,8 @@ const CarBookDetails = () => {
 
 
     const [extraRates, setExtraRates] = useState();
+    const [extraHour,setExtraHour]=useState()
+    const [description,setDescription]=useState()
     const [isEditingRates, setIsEditingRates] = useState(false);
     const [isUpdatingRates, setIsUpdatingRates] = useState(false);
     const [isCancellingBooking, setIsCancellingBooking] = useState(false);
@@ -122,14 +124,18 @@ const CarBookDetails = () => {
 
     const handleCompleteBooking = async () => {
         setIsCompletingBooking(true);
-        await dispatch(completeBooking({ id, extraRates }));
+        console.log(extraRates,extraHour,description);
+        
+        await dispatch(completeBooking({ id, extraRates ,extraHour,description}));
         setIsCompletingBooking(false);
         loadData();
     };
 
     const handleRate = async () => {
         setIsUpdatingRates(true);
-        await dispatch(updateRate({ id, extraRates }));
+        console.log(extraRates,extraHour,description);
+        
+        await dispatch(updateRate({ id, extraRates ,extraHours:extraHour,description}));
         setIsUpdatingRates(false);
         loadData();
     };
@@ -302,8 +308,8 @@ const CarBookDetails = () => {
                         type="number"
                         className="p-3 border border-gray-300 rounded w-full mb-4"
                         placeholder="Enter extra Kilometer"
-                        // value={extraRates}
-                        // onChange={(e) => setExtraRates(Number(e.target.value))}
+                        value={extraHour}
+                        onChange={(e) => setExtraHour(Number(e.target.value))}
                     />
                     {isBookingComplete && (
                         <button
@@ -326,8 +332,8 @@ const CarBookDetails = () => {
                         type="text"
                         className="p-3 border border-gray-300 rounded w-full mb-4"
                         placeholder="Enter Descirptions"
-                        // value={extraRates}
-                        // onChange={(e) => setExtraRates(Number(e.target.value))}
+                        value={description}
+                        onChange={(e) =>setDescription((e.target.value))}
                     />
                     {isBookingComplete && (
                         <button

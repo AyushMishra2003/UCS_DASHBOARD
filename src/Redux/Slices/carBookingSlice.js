@@ -49,9 +49,9 @@ export const approveBooking = createAsyncThunk('/approveBooking', async ({ id, a
 });
 
 // Async thunk for completing a booking
-export const completeBooking = createAsyncThunk('/completeBooking', async ({ id,extraRates}, { rejectWithValue }) => {
+export const completeBooking = createAsyncThunk('/completeBooking', async ({ id,extraRates,extraHour,description}, { rejectWithValue }) => {
     try {
-        const res = await axiosInstance1.post(`/oneway/booking/book/complete/${id}`,{extraRates});
+        const res = await axiosInstance1.post(`/oneway/booking/book/complete/${id}`,{extraRates,extraHours:extraHour,description});
         toast.success('Booking confirmed successfully!');
         return res.data;
     } catch (e) {
