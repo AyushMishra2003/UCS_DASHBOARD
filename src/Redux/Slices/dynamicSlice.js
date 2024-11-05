@@ -59,9 +59,12 @@ export const modelOpen = createAsyncThunk(
 
 export const addSections = createAsyncThunk(
   "discounts/section",
-  async (data, { rejectWithValue }) => {
+  async ({data,update,oldTitle}, { rejectWithValue }) => {
     try {
       console.log(data);
+
+      console.log(update);
+      
 
       const formData = new FormData();
 
@@ -69,13 +72,23 @@ export const addSections = createAsyncThunk(
       formData.append("description", data?.description);
       formData.append("photo", data?.photo);
       formData.append("page", data?.page);
+      formData.append("oldtitle",oldTitle);
 
-      const response = await axiosInstance1.post(`/dynamic/section`, formData);
+      let response
+      
+      if(update){
+         response = await axiosInstance1.post(`/dynamic/section/update/p1`, formData);
+      }else{
+         response = await axiosInstance1.post(`/dynamic/section`, formData);
+      }
+   
       console.log(response);
 
-      toast.success(response.data.message);
+      // toast.success(response.data.message);
       return response.data;
     } catch (error) {
+      console.log(error);
+      
       toast.error(error?.response?.data?.message || "Failed to add Section");
       return rejectWithValue(error.response.data);
     }
@@ -132,7 +145,7 @@ export const deleteAllInquiry = createAsyncThunk(
 
 export const addChild = createAsyncThunk(
   "discounts/section/chid",
-  async ({ data, child }, { rejectWithValue }) => {
+  async ({ data, child,update }, { rejectWithValue }) => {
     try {
       console.log(data);
       console.log(child);
@@ -142,10 +155,20 @@ export const addChild = createAsyncThunk(
       formData.append("description", data?.description);
       formData.append("photo", data?.photo);
 
-      const response = await axiosInstance1.post(
-        `/dynamic/child/${child}`,
-        formData
-      );
+      let response
+       
+      if(update){
+       response = await axiosInstance1.post(
+          `/dynamic/child/update/${child}`,
+          formData
+        );
+      }else{
+       response = await axiosInstance1.post(
+          `/dynamic/child/${child}`,
+          formData
+        );
+      }
+     
       console.log(response);
 
       toast.success(response.data.message);

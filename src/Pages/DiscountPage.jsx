@@ -108,14 +108,15 @@ const DiscountManager = () => {
         dispatch(changeDiscountStatus({ id, active }));
     };
     const handledelete = async(id) => {
-        console.log("delete discount is");
-        
-        const response=await dispatch(deleteDiscount({ id}));
-        console.log(response);
-        
+        const confirm=window.confirm("Are you sure,You want to delete")
+
+        if(confirm){
+          const response=await dispatch(deleteDiscount({ id}));
+
         if (response?.payload) {
             await dispatch(fetchDiscounts());
         }
+    }
     };
 
     if (loading) return(

@@ -8,6 +8,7 @@ import { addChild, addSections, getSections } from '../../Redux/Slices/dynamicSl
 const TextEditor = ({ onClose, initialData, saveData,page,child }) => { // Set a default value for initialData
   const [editorContent, setEditorContent] = useState(initialData.content || '');
   const [title, setTitle] = useState(initialData.title || '');
+  const oldTitle=initialData?.title
   const [category, setCategory] = useState(initialData.category || 'Azolla Benefits');
   const [customField1, setCustomField1] = useState(initialData.customField1 || '');
   // const [customField2, setCustomField2] = useState(initialData.customField2 || '');
@@ -65,9 +66,21 @@ const TextEditor = ({ onClose, initialData, saveData,page,child }) => { // Set a
     let response
 
     if(child){
-      response=await dispatch(addChild({data,child}));
+      const update="ayush"
+      if(initialData){
+        response=await dispatch(addChild({data,child,update}));
+      }else{
+        response=await dispatch(addChild({data,child}));
+      }
+  
     }else{
-     response=await dispatch(addSections(data));
+      const update="ayush"
+      if(initialData){
+        response=await dispatch(addSections({data,update,oldTitle}));
+      }else{
+        response=await dispatch(addSections({data}));
+      }
+  
     }
     console.log(response);
 
