@@ -14,6 +14,7 @@ import localTripReducer from './Slices/localTripSlice'
 import airportTripReducer from './Slices/airportSlice'
 import outstationSlice from './Slices/outStationSlice'
 import dynamicSlice from './Slices/dynamicSlice'
+import packageSlice from './Slices/packageSlice'
 
 const store = configureStore({
     reducer: {
@@ -31,7 +32,8 @@ const store = configureStore({
         localTrip: localTripReducer,
         airportTrip: airportTripReducer,
         outstation: outstationSlice,
-        dynamic:dynamicSlice
+        dynamic:dynamicSlice,
+        package:packageSlice
     },
     devTools: true
 })

@@ -67,15 +67,37 @@ const TextEditor = ({ onClose, initialData, saveData,page,child }) => { // Set a
 
     if(child){
       const update="ayush"
-      if(initialData){
-        response=await dispatch(addChild({data,child,update}));
+      console.log(Object.keys(initialData));
+      let isTrue=false
+
+      if(Object.keys(initialData).length!=0){
+         isTrue=true  
+      }
+
+      console.log("child is",child)
+      console.log("old title is",oldTitle)
+
+      if(isTrue){
+        response=await dispatch(addChild({data,child,update,oldTitle}));
       }else{
         response=await dispatch(addChild({data,child}));
       }
   
     }else{
+      // (Object.keys(myEmptyObj).length)
       const update="ayush"
-      if(initialData){
+      console.log(initialData);
+
+      console.log(Object.keys(initialData));
+      let isTrue=false
+
+      if(Object.keys(initialData).length!=0){
+         isTrue=true  
+      }
+      
+      
+      
+      if(isTrue){
         response=await dispatch(addSections({data,update,oldTitle}));
       }else{
         response=await dispatch(addSections({data}));
@@ -99,7 +121,7 @@ const TextEditor = ({ onClose, initialData, saveData,page,child }) => { // Set a
    
 
   return (
-    <div className='relative bg-black full h-full z-50'>
+    <div className='relative bg-black full h-full z-50 border border-red-500'>
     <div className="absolute  bg-black z-50 w-full h-full flex items-center justify-center">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full relative top-[0.2rem] overflow-y-auto max-h-[85vh]" >
         <button
@@ -109,7 +131,7 @@ const TextEditor = ({ onClose, initialData, saveData,page,child }) => { // Set a
           &#x2715;
         </button>
 
-        <h2 className="text-2xl font-bold mb-4">Edit Description</h2>
+        <h2 className="text-2xl font-bold mb-4">Edit Description 3423</h2>
 
         <div className="mb-4 bg-white text-black">
           <label className="block text-gray-700 mb-2">Category</label>

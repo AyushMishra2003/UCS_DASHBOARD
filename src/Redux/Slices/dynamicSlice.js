@@ -145,15 +145,19 @@ export const deleteAllInquiry = createAsyncThunk(
 
 export const addChild = createAsyncThunk(
   "discounts/section/chid",
-  async ({ data, child,update }, { rejectWithValue }) => {
+  async ({ data, child,update,oldTitle }, { rejectWithValue }) => {
     try {
-      console.log(data);
-      console.log(child);
+       
+      console.log("func oldTitle",oldTitle)
 
       const formData = new FormData();
       formData.append("title", data?.title);
       formData.append("description", data?.description);
       formData.append("photo", data?.photo);
+      formData.append("oldTitle",oldTitle)
+
+      console.log("form data is",formData);
+      
 
       let response
        

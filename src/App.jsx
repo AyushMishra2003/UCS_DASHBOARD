@@ -77,6 +77,7 @@ import Demo from './Pages/Inquiry/Demo'
 import TermCondition from './Pages/TermCondition/TermCondition'
 import AddTermCondition from './Pages/TermCondition/AddTermCondition'
 import EditTermCondition from './Pages/TermCondition/EditTermCondition'
+import PackageSetup from './Pages/package/PackageSetup'
 
 const App = () => {
   return (
@@ -180,6 +181,13 @@ const App = () => {
            <Route path='/view/term/condition' element={<TermCondition/>} />
            <Route path='/add/term/condition' element={<AddTermCondition/>} />
            <Route path='/edit/term/condition' element={<EditTermCondition/>} />
+
+           
+           {/* Package */}
+           <Route path='/package' element={<PackageSetup/>} />
+
+
+
         </Route>
 
 

@@ -51,7 +51,7 @@ export const updateLocalRate = createAsyncThunk(
                 perHour:data.perHour,
                 perKm:data.perKm,
                 rateFor80Km8Hours:data.rateFor80Km8Hours,
-                rateFor100Km8Hours:data.rateFor100Km8Hours
+                rateFor120Km12Hours:data.rateFor120Km12Hours
              }
             
             const response = await axiosInstance1.put(`/local/rate/update`,data1);

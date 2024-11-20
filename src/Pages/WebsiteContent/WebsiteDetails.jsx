@@ -41,7 +41,7 @@ const WebsiteDetails = () => {
   };
   
 
-  const truncateDescription = (htmlString, maxLength = 100) => {
+  const truncateDescription = (htmlString, maxLength = 50) => {
     // Create a temporary element to convert the HTML to plain text
     const tempElement = document.createElement('div');
     tempElement.innerHTML = htmlString;
@@ -73,16 +73,20 @@ const WebsiteDetails = () => {
   const renderSections = () => {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
-
-    if(sections.length===0){
-      return <p>No Data Found</p>
+  
+    if (sections.length === 0) {
+      return <p>No Description Data</p>;
     }
-
+  
     return sections.map((section, index) => (
       <tr key={index} className="border-b">
         <td className="px-4 py-2 text-center">{index + 1}</td>
         <td className="px-4 py-2">{section.title}</td>
-        <td className="px-4 py-2">{truncateDescription(section.description, 100)}</td>
+         
+        <td className="px-4 py-2">
+          {section.description ? truncateDescription(section.description, 100) : "No Description"}
+        </td>
+    
         <td className="px-4 py-2 text-center">
           {section?.photo ? (
             <img src={section?.photo?.secure_url} alt={section.title} className="w-20 h-20 object-cover" />
@@ -107,6 +111,7 @@ const WebsiteDetails = () => {
       </tr>
     ));
   };
+  
 
   return (
     <HomeLayout>
