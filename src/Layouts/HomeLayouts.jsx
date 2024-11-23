@@ -24,6 +24,7 @@ const HomeLayout = ({ children }) => {
     const [dropdownActive1,setDropdownActive1]=useState(false)
     const [dropdownActive2,setDropdownActive2]=useState(false)
     const [dropdownActive3,setDropdownActive3]=useState(false)
+    const [dropdownActive4,setDropdownActive4]=useState(false)
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -287,6 +288,32 @@ const HomeLayout = ({ children }) => {
                                      Cab List
                                 </NavLink>
                             </li> */}
+
+<li className='relative'>
+                                <div onClick={() => setDropdownActive4(!dropdownActive4)} className={`${listStyle} cursor-pointer flex items-center justify-between`}>
+                                    <div className='flex items-center justify-start gap-2'>
+                                        <LuShoppingBag />    <span>Packages</span>
+                                    </div>
+                                    {dropdownActive4 ? <RiArrowDownSLine className='text-[1.5rem] font-bold' /> : <RiArrowRightSLine className='text-[1.5rem] font-bold' />}
+                                </div>
+                                {dropdownActive4 && (
+                                    <ul className='mt-2 ml-4'>
+                                         <li>
+                                <NavLink to={'/view/package'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                    <FaCar />
+                                     View Package
+                                </NavLink>
+                            </li> 
+                            <li>
+                                <NavLink to={'/add/package'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                    <FaCar />
+                                    Add Package
+                                </NavLink>
+                            </li>
+                                       
+                                    </ul>
+                                )}
+                            </li>
                             <li>
                                 <NavLink to={'/discount'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
                                     <FaSailboat />
@@ -299,6 +326,8 @@ const HomeLayout = ({ children }) => {
                                      Customer Details
                                 </NavLink>
                             </li>
+                            
+                          
                             {/* <li>
                                 <NavLink to={'/category/list'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
                                     <FaSailboat />
@@ -351,6 +380,7 @@ const HomeLayout = ({ children }) => {
                                     Add Term & Condition
                                 </NavLink>
                             </li> */}
+
 
                         </div>
                     </ul>

@@ -6,6 +6,8 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useDispatch } from 'react-redux';
 import { addPackage } from '../../Redux/Slices/packageSlice';
+import { MdDelete } from 'react-icons/md';
+import { Toaster, toast } from 'sonner'
 
 const PackageSetup = () => {
     const [activeTab, setActiveTab] = useState(0);
@@ -21,6 +23,7 @@ const PackageSetup = () => {
     const [inclusive, setInclusive] = useState('');
     const [exclusive, setExclusive] = useState('');
     const [bookingPolicy, setBookingPolicy] = useState('');
+    const [termConditon,setTermCondition]=useState('')
     const [photos, setPhotos] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -145,7 +148,7 @@ const PackageSetup = () => {
       formData.append('bookingPolicy', bookingPolicy);
   
       // Add terms and conditions (if it's the same as booking policy, this can be adjusted)
-      formData.append('termsAndCondition', bookingPolicy);
+      formData.append('termsAndCondition', termConditon);
   
       // Add day-wise data
       dayWiseData.forEach((day, index) => {
@@ -181,11 +184,11 @@ const PackageSetup = () => {
 
   return (
     <HomeLayout>
-      <div className="container mx-auto p-6">
+      <div className=" mx-auto">
 
         <h1 className='text-center mb-10 text-black font-bold text-4xl'>PACKAGE ADDED </h1>
         {/* Tabs */}
-        <div className="flex space-x-4 mb-6 mx-auto items-center justify-center py-2">
+        {/* <div className="flex space-x-4 mb-6 mx-auto items-center justify-center py-2 border border-red-500">
           {['Basic Details', 'Photos', 'Inclusive', 'Exclusive Terms', 'Booking Policy', 'Terms and Conditions', 'Day Wise','Submit Button'].map((tab, index) => (
             <button
               key={index}
@@ -199,8 +202,50 @@ const PackageSetup = () => {
               {tab}
             </button>
           ))}
+        </div> */}
+        <div className="flex items-center justify-center space-x-4 mb-6 mx-auto py-2 border-b-2 border-[#e9dddd]">
+  {[
+    'Basic Details',
+    'Photos',
+    'Inclusive',
+    'Exclusive Terms',
+    'Booking Policy',
+    'Terms and Conditions',
+    'Day Wise',
+    'Submit Button',
+  ].map((tab, index, array) => (
+    <React.Fragment key={index}>
+      {/* Tab Button */}
+      <button
+        className={`relative z-10 px-3 py-1.5 rounded-full text-center transition text-sm font-medium truncate ${
+          activeTab === index
+            ? 'bg-blue-500 text-white shadow-md'
+            : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+        }`}
+        onClick={() => handleTabChange(index)}
+        style={{ minWidth: '80px', maxWidth: '120px' }} // Ensures uniform size
+      >
+        {tab}
+      </button>
+
+      {/* Connector for all but last tab */}
+      {index < array.length - 1 && (
+        <div className="flex-grow flex items-center space-x-1">
+          <span className="h-1.5 w-1.5 rounded-full bg-gray-400"></span>
+          <span className="flex-grow border-dotted border-t border-gray-400"></span>
+          <span className="h-1.5 w-1.5 rounded-full bg-gray-400"></span>
+        </div>
+      )}
+    </React.Fragment>
+  ))}
         </div>
 
+
+       <div className='container mx-auto '>
+       {/* <button onClick={() => toast('My first toast')}>
+        Give me a toast
+      </button> */}
+   
 
         {/* Tab Content */}
         {activeTab === 0 && (
@@ -384,14 +429,14 @@ const PackageSetup = () => {
                           onClick={() => handleDeletePhoto(index)}
                           className="text-white mr-2"
                         >
-                          Delete
+                          <MdDelete className='text-red-500 text-2xl'/>
                         </button>
-                        <button
+                        {/* <button
                           onClick={() => handleEditPhoto(index)}
                           className="text-white"
                         >
                           Edit
-                        </button>
+                        </button> */}
                       </div>
                     </div>
                   ))}
@@ -424,86 +469,94 @@ const PackageSetup = () => {
         )}
 
 
-{activeTab === 5 && (
+         {activeTab === 5 && (
           <div className="mt-4 max-w-4xl mx-auto">
             <label>Term and Conditions</label>
-            <ReactQuill value={bookingPolicy} onChange={setBookingPolicy} className="w-full" />
+            <ReactQuill value={termConditon} onChange={setTermCondition} className="w-full" />
           </div>
         )}
 
 
-{activeTab === 6 && (
-  <div className="space-y-4 max-w-5xl mx-auto">
-    {/* Add Day Wise Button */}
+        {activeTab === 6 && (
+          <div className="space-y-4 max-w-5xl mx-auto">
+  {/* Add Day Wise Button */}
+  <button
+    onClick={handleAddDayWise}
+    className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+  >
+    Add Day
+  </button>
+
+  {/* Day-wise content and date */}
+  <div className="space-y-6">
+    {dayWiseData.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).map((day, index) => {
+      const actualIndex = currentPage * itemsPerPage + index + 1; // Absolute day number
+      return (
+        <div key={actualIndex} className="bg-white p-4 rounded-lg shadow-lg space-y-4">
+          {/* Container for date and content */}
+          <div className="flex items-start space-x-6 ">
+            {/* Day Number Section */}
+            <div className="flex flex-col items-start space-y-4 w-[30%]">
+              <div className="flex items-center space-x-2">
+                <label className="text-sm font-medium text-gray-700">Day:</label>
+                <input
+                  type="number"
+                  value={actualIndex} // Shows the absolute day number
+                  readOnly
+                  className="text-gray-700 bg-gray-100 px-2 py-1 rounded-md w-16 text-center"
+                />
+              </div>
+
+              {/* Delete Button */}
+              <button
+                onClick={() => handleDeleteDay(currentPage * itemsPerPage + index)} // Pass the correct index
+                className="bg-red-500 w-fit text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300"
+              >
+                Delete
+              </button>
+            </div>
+
+            {/* React Quill Editor Section */}
+            <div className="w-[65%]">
+              <ReactQuill
+                value={day.content}
+                onChange={(value) =>
+                  handleDayWiseChange(currentPage * itemsPerPage + index, value) // Update content
+                }
+                placeholder="Enter day content"
+                className="rounded-lg p-3 border focus:ring-2 focus:ring-blue-500"
+                style={{
+                  maxHeight: '200px', // Set the max height
+                  overflowY: 'auto', // Enable vertical scroll
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+
+  {/* Pagination */}
+  <div className="flex justify-between items-center">
     <button
-      onClick={handleAddDayWise}
-      className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+      onClick={() => handlePageChange({ selected: currentPage - 1 })}
+      disabled={currentPage === 0}
+      className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition duration-300"
     >
-      Add Day
+      Prev
     </button>
-
-    {/* Day-wise content and date */}
-    <div className="space-y-6">
-  {dayWiseData.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).map((day, index) => (
-    <div key={index} className="bg-white p-4 rounded-lg shadow-lg space-y-4">
-      {/* Container for date and content */}
-      <div className="flex items-start space-x-6">
-        {/* Date Input Section */}
-        <div className="flex flex-col items-start space-y-4 w-[30%]">
-          <input
-            type="date"
-            value={day.date.toISOString().split('T')[0]} // Display date in YYYY-MM-DD format
-            onChange={(e) => handleDayDateChange(index, new Date(e.target.value))}
-            className="border rounded-lg p-3 w-full focus:ring-2 focus:ring-blue-500"
-          />
-
-          {/* Delete Button */}
-          <button
-            onClick={() => handleDeleteDay(index)}
-            className="bg-red-500 w-fit text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300"
-          >
-            Delete
-          </button>
-        </div>
-
-        {/* React Quill Editor Section */}
-        <div className="w-[65%]">
-          <ReactQuill
-            value={day.content}
-            onChange={(value) => handleDayWiseChange(index, value)} // Update day content
-            placeholder="Enter day content"
-            className="rounded-lg p-3 border focus:ring-2 focus:ring-blue-500"
-            style={{ 
-              maxHeight: '200px', // Set the max height
-              overflowY: 'auto',   // Enable vertical scroll
-            }}
-          />
-        </div>
-      </div>
-    </div>
-  ))}
+    <button
+      onClick={() => handlePageChange({ selected: currentPage + 1 })}
+      disabled={(currentPage + 1) * itemsPerPage >= dayWiseData.length}
+      className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition duration-300"
+    >
+      Next
+    </button>
+  </div>
 </div>
 
-
-    {/* Pagination */}
-    <div className="flex justify-between items-center">
-      <button
-        onClick={() => handlePageChange({ selected: currentPage - 1 })}
-        disabled={currentPage === 0}
-        className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition duration-300"
-      >
-        Prev
-      </button>
-      <button
-        onClick={() => handlePageChange({ selected: currentPage + 1 })}
-        disabled={(currentPage + 1) * itemsPerPage >= dayWiseData.length}
-        className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition duration-300"
-      >
-        Next
-      </button>
-    </div>
-  </div>
-)}
+        )}
 
        {/* Submit Button in the Last Tab */}
        {activeTab === 7 && (
@@ -521,7 +574,9 @@ const PackageSetup = () => {
                 
               </button>
             </div>
-          )}
+        )}
+
+</div>
 
 
 
