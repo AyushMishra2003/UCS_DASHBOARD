@@ -48,7 +48,8 @@
     "react-toastify": "^10.0.5",
     "react-tooltip": "^5.28.0",
     "sonner": "^1.5.0",
-    "styled-components": "^6.1.12"
+    "styled-components": "^6.1.12",
+    "sweetalert2": "^11.14.5"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",

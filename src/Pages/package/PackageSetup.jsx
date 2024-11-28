@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import HomeLayout from '../../Layouts/HomeLayouts';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { useDispatch } from 'react-redux';
-import { addPackage } from '../../Redux/Slices/packageSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { addPackage, getPackageCategory, getPackageInclude } from '../../Redux/Slices/packageSlice';
 import { MdDelete } from 'react-icons/md';
 import { Toaster, toast } from 'sonner'
 
@@ -20,6 +20,7 @@ const PackageSetup = () => {
       location: '',
       mainPhoto: null,
     });
+       
     const [inclusive, setInclusive] = useState('');
     const [exclusive, setExclusive] = useState('');
     const [bookingPolicy, setBookingPolicy] = useState('');
@@ -34,7 +35,11 @@ const PackageSetup = () => {
     });
 
 
-    console.log(includeDetails);
+    
+    const { packageCategory, packageInclude, error } = useSelector((state) => state.package);
+
+    console.log(packageCategory,packageInclude);
+    
     
    
     const dispatch=useDispatch()
@@ -178,8 +183,54 @@ const PackageSetup = () => {
       
       
     };
-  
 
+
+    const fetchData = async () => {
+      const response = await dispatch(getPackageCategory());
+      console.log(response);
+    };
+  
+    const fetchInclude = async () => {
+      const response = await dispatch(getPackageInclude());
+      console.log(response);
+    };
+
+     // State to track selected items
+     const [includeDetails1, setIncludeDetails1] = useState([]);
+
+     const handleCheckboxChange = (item) => {
+      // This function will receive the item and toggle its presence in the list
+      setIncludeDetails1((prevDetails) => {
+        // Check if the item is already selected
+        const isSelected = prevDetails.some((detail) => detail.id === item.id);
+        
+        // If the item is already selected, remove it from the list
+        if (isSelected) {
+          return prevDetails.filter((detail) => detail.id !== item.id);
+        } else {
+          // If it's not selected, add it to the list
+          return [...prevDetails, item];
+        }
+      });
+    };
+    
+
+     console.log(includeDetails1);
+     
+     
+     // JSX remains the same
+     
+   
+
+
+    useEffect(()=>{
+          fetchData()
+    },[])
+
+    useEffect(()=>{
+    fetchInclude()
+    },[])
+  
 
 
   return (
@@ -208,7 +259,7 @@ const PackageSetup = () => {
     'Basic Details',
     'Photos',
     'Inclusive',
-    'Exclusive Terms',
+    'Exclusive',
     'Booking Policy',
     'Terms and Conditions',
     'Day Wise',
@@ -249,7 +300,7 @@ const PackageSetup = () => {
 
         {/* Tab Content */}
         {activeTab === 0 && (
-  <div className="space-y-6 border-2 border-gray-300 p-6 max-w-4xl mx-auto mt-10">
+        <div className="space-y-6 border-2 border-gray-300 p-6 max-w-4xl mx-auto mt-10">
     {/* Package Name and Date */}
     <div className="flex space-x-6">
       <div className="w-1/2">
@@ -336,12 +387,39 @@ const PackageSetup = () => {
         />
       </div>
     </div>
-
     
+    
+     
 
     {/* Predefined Options */}
+    <div className="space-y-2">
+    {/* Render checkboxes dynamically */}
+    {packageInclude.map((item) => (
+      <div key={item.id} className="flex items-center space-x-2 bg-white max-w-fit p-2">
+        <input
+          type="checkbox"
+          name={item.includeName}
+          checked={includeDetails1.some((detail) => detail.id === item.id)} // This will check if this item is selected
+          onChange={() => handleCheckboxChange(item)} // Handle change event to toggle the checkbox
+          className="h-5 w-5 text-red-500 border-2 border-gray-300 rounded-sm focus:ring-0"
+        />
+        <label className="bg-white">{item.includeName}</label>
+      </div>
+    ))}
+
+    {/* Display selected options */}
+    <div>
+      <h3>Selected Includes:</h3>
+      <ul className="list-disc pl-5">
+        {includeDetails1.map((detail) => (
+          <li key={detail.id}>{detail.includeName}</li>
+        ))}
+      </ul>
+    </div>
+  </div>
+
     {/* Hotel Included */}
-    <div className="flex items-center space-x-2 bg-white max-w-fit">
+    <div className="flex items-center space-x-2 bg-white max-w-fit ">
         <input
           type="checkbox"
           name="hotelIncluded"
@@ -353,7 +431,7 @@ const PackageSetup = () => {
           className="h-5 w-5 text-red-500 border-2 border-gray-300 rounded-sm focus:ring-0"
         />
         <label className='bg-white'>Hotel Included</label>
-      </div>
+    </div>
 
       {/* Meal Included */}
       <div className="flex items-center space-x-2">
@@ -388,7 +466,9 @@ const PackageSetup = () => {
 
 
 
-  </div>
+
+
+         </div>
           )}
 
 

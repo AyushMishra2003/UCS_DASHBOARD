@@ -79,6 +79,7 @@ import AddTermCondition from './Pages/TermCondition/AddTermCondition'
 import EditTermCondition from './Pages/TermCondition/EditTermCondition'
 import PackageSetup from './Pages/package/PackageSetup'
 import ViewPackage from './Pages/package/ViewPackage'
+import ChangePackageSetup from './Pages/package/ChangePackageSetup'
 
 const App = () => {
   return (
@@ -187,6 +188,7 @@ const App = () => {
            {/* Package */}
            <Route path='/add/package' element={<PackageSetup/>} />
            <Route path='/view/package' element={<ViewPackage/>} />
+           <Route path='/package/setup' element={<ChangePackageSetup/>} />
 
 
 
