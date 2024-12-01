@@ -14,6 +14,8 @@ const ChangePackageSetup = () => {
   const [isCategoryEdit, setIsCategoryEdit] = useState(null);
   const [isIncludeEdit, setIsIncludeEdit] = useState(null);
 
+  const [rotate,setRotate]=useState(false)
+
   const [categoryName, setCategoryName] = useState('');
   const [categoryPhoto, setCategoryPhoto] = useState(null);
   const [includeName, setIncludeName] = useState('');
@@ -58,6 +60,8 @@ const ChangePackageSetup = () => {
     console.log("ayush");
      
 
+    setRotate(true)
+
     if (categoryName && categoryPhoto) {
 
       console.log(categoryName);
@@ -80,6 +84,7 @@ const ChangePackageSetup = () => {
       }
       setIsCategoryEdit(null)
       setIsCategoryModalOpen(null);
+      setRotate(false)
 
       fetchData()
            
@@ -119,6 +124,9 @@ const ChangePackageSetup = () => {
     if (includeName) {
       // Dispatch action to add new include
      console.log(isIncludeEdit);
+
+
+     setRotate(true)
      
 
   
@@ -138,7 +146,7 @@ const ChangePackageSetup = () => {
               }
 
 
-              
+              setRotate(true)
               setIsIncludeModalOpen(false)
         
               fetchInclude()
