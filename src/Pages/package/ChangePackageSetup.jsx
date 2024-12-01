@@ -3,6 +3,7 @@ import HomeLayout from '../../Layouts/HomeLayouts'
 import { useDispatch, useSelector } from 'react-redux'
 import { addPackageCategory, addPackageInclude, deletePackageCategory, deletePackageInclude, editPackageCategory, editPackageInclude, getPackageCategory, getPackageInclude } from '../../Redux/Slices/packageSlice'
 import { FaEdit, FaTrash } from 'react-icons/fa';
+import Swal from 'sweetalert2';
 
 const ChangePackageSetup = () => {
   const dispatch = useDispatch();
