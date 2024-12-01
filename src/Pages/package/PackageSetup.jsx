@@ -27,6 +27,13 @@ const PackageSetup = () => {
     const [termConditon,setTermCondition]=useState('')
     const [photos, setPhotos] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [checkedItems, setCheckedItems] = useState([]); // State to store selected items
+    const [selectedCategory, setSelectedCategory] = useState(""); // State for selected category
+
+    const fetchInclude = async () => {
+      await dispatch(getPackageInclude());
+    };
+  
 
     const [includeDetails, setIncludeDetails] = useState({
       hotelIncluded: false,
@@ -119,7 +126,11 @@ const PackageSetup = () => {
       // Add logic to edit day-wise content
       console.log('Edit day:', dayWiseData[index]);
     };
-
+   
+    const handleCategoryChange = (e) => {
+      setSelectedCategory(e.target.value); // Update selected category
+    };
+  
 
     // Submit button
     const handleSubmit = async() => {
@@ -148,13 +159,15 @@ const PackageSetup = () => {
       // Add inclusions and exclusions
       formData.append('inclusive', inclusive);
       formData.append('exclusive', exclusive);
+
+      formData.append('category', selectedCategory);
   
       // Add booking policy
       formData.append('bookingPolicy', bookingPolicy);
   
       // Add terms and conditions (if it's the same as booking policy, this can be adjusted)
       formData.append('termsAndCondition', termConditon);
-  
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
       // Add day-wise data
       dayWiseData.forEach((day, index) => {
           formData.append(`dayWise[${index}][date]`, day.date.toISOString());
@@ -163,12 +176,13 @@ const PackageSetup = () => {
 
 
         // Add included details as an array
+  // Prepare the included items array similar to your example
   const includedDetailsArray = [];
-  if (includeDetails.hotelIncluded) includedDetailsArray.push('hotelIncluded');
-  if (includeDetails.mealIncluded) includedDetailsArray.push('mealIncluded');
-  if (includeDetails.dummyOption) includedDetailsArray.push('dummyOption');
+  checkedItems.forEach((item) => {
+    includedDetailsArray.push(item); // Add checked items to the array
+  });
 
-  // Append the array of included details
+  // Append the array of included items to FormData
   formData.append('includedPackages', JSON.stringify(includedDetailsArray));
     
       console.log(formData);
@@ -176,8 +190,12 @@ const PackageSetup = () => {
       const response=await dispatch(addPackage(formData))
 
       setLoading(false)
+
+
       
       console.log(response);
+
+      setCheckedItems([])
       
 
       
@@ -189,36 +207,38 @@ const PackageSetup = () => {
       const response = await dispatch(getPackageCategory());
       console.log(response);
     };
-  
-    const fetchInclude = async () => {
-      const response = await dispatch(getPackageInclude());
-      console.log(response);
-    };
-
-     // State to track selected items
-     const [includeDetails1, setIncludeDetails1] = useState([]);
-
-     const handleCheckboxChange = (item) => {
-      // This function will receive the item and toggle its presence in the list
-      setIncludeDetails1((prevDetails) => {
-        // Check if the item is already selected
-        const isSelected = prevDetails.some((detail) => detail.id === item.id);
-        
-        // If the item is already selected, remove it from the list
-        if (isSelected) {
-          return prevDetails.filter((detail) => detail.id !== item.id);
-        } else {
-          // If it's not selected, add it to the list
-          return [...prevDetails, item];
-        }
-      });
-    };
-    
-
-     console.log(includeDetails1);
      
      
      // JSX remains the same
+     
+     const [selectedInclude, setSelectedInclude] = useState(null);
+
+     const handleCheckboxChange1 = (includeName) => {
+       setSelectedInclude((prev) => (prev === includeName ? null : includeName));
+     };
+   
+     const handleSave = () => {
+       // Dispatch action or API call to save selectedInclude
+       console.log("Selected Include:", selectedInclude);
+       dispatch({
+         type: "SAVE_SELECTED_INCLUDE",
+         payload: selectedInclude,
+       });
+     };
+    
+
+     useEffect(() => {
+      fetchInclude();
+    }, []);
+  
+    const handleCheckboxChange = (item) => {
+      setCheckedItems((prev) =>
+        prev.includes(item)
+          ? prev.filter((i) => i !== item) // Remove if already checked
+          : [...prev, item] // Add if not already checked
+      );
+    };
+   
      
    
 
@@ -230,6 +250,10 @@ const PackageSetup = () => {
     useEffect(()=>{
     fetchInclude()
     },[])
+
+
+    console.log(checkedItems);
+    
   
 
 
@@ -387,88 +411,60 @@ const PackageSetup = () => {
         />
       </div>
     </div>
+      <div className='flex items-start justify-between'>
+      {/* include */}
+       <div>
+        <h2 className="text-lg font-bold">Selcted Includes:-</h2>
+        {error && <p className="text-red-500">Error: {error}</p>}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-fit ">
+          {packageInclude?.map((include, index) => (
+            <div key={index} className="flex items-center">
+              <input
+                type="checkbox"
+                id={`include-${index}`}
+                className="mr-2"
+                checked={checkedItems.includes(include.includeName)}
+                onChange={() => handleCheckboxChange(include.includeName)}
+              />
+              <label htmlFor={`include-${index}`} className="text-sm">
+                {include.includeName}
+              </label>
+            </div>
+          ))}
+        </div>
+
+      </div>
+      {/* <div className="flex space-x-6"> */}
+      <div className="w-1/2">
+        {/* Dropdown for selecting a category */}
+        <div className="mb-4 items-end">
+          <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+            Select a Category:
+          </label>
+          <select
+            id="category"
+            className="mt-1 block w-full border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            value={selectedCategory}
+            onChange={handleCategoryChange}
+          >
+            <option value="">-- Select a Category --</option>
+            {packageCategory?.map((category) => (
+              <option key={category._id} value={category.categoryName}>
+                {category.categoryName}
+              </option>
+            ))}
+          </select>
+        </div>
+        </div>
+
+        </div> 
+        </div>
     
-    
-     
-
-    {/* Predefined Options */}
-    <div className="space-y-2">
-    {/* Render checkboxes dynamically */}
-    {packageInclude.map((item) => (
-      <div key={item.id} className="flex items-center space-x-2 bg-white max-w-fit p-2">
-        <input
-          type="checkbox"
-          name={item.includeName}
-          checked={includeDetails1.some((detail) => detail.id === item.id)} // This will check if this item is selected
-          onChange={() => handleCheckboxChange(item)} // Handle change event to toggle the checkbox
-          className="h-5 w-5 text-red-500 border-2 border-gray-300 rounded-sm focus:ring-0"
-        />
-        <label className="bg-white">{item.includeName}</label>
-      </div>
-    ))}
-
-    {/* Display selected options */}
-    <div>
-      <h3>Selected Includes:</h3>
-      <ul className="list-disc pl-5">
-        {includeDetails1.map((detail) => (
-          <li key={detail.id}>{detail.includeName}</li>
-        ))}
-      </ul>
-    </div>
-  </div>
-
-    {/* Hotel Included */}
-    <div className="flex items-center space-x-2 bg-white max-w-fit ">
-        <input
-          type="checkbox"
-          name="hotelIncluded"
-          checked={includeDetails.hotelIncluded}
-          onChange={() => setIncludeDetails({
-            ...includeDetails,
-            hotelIncluded: !includeDetails.hotelIncluded
-          })}
-          className="h-5 w-5 text-red-500 border-2 border-gray-300 rounded-sm focus:ring-0"
-        />
-        <label className='bg-white'>Hotel Included</label>
-    </div>
-
-      {/* Meal Included */}
-      <div className="flex items-center space-x-2">
-        <input
-          type="checkbox"
-          name="mealIncluded"
-          checked={includeDetails.mealIncluded}
-          onChange={() => setIncludeDetails({
-            ...includeDetails,
-            mealIncluded: !includeDetails.mealIncluded
-          })}
-          className="h-5 w-5"
-        />
-        <label>Meal Included</label>
-      </div>
-
-      {/* Dummy Option */}
-      <div className="flex items-center space-x-2">
-        <input
-          type="checkbox"
-          name="dummyOption"
-          checked={includeDetails.dummyOption}
-          onChange={() => setIncludeDetails({
-            ...includeDetails,
-            dummyOption: !includeDetails.dummyOption
-          })}
-          className="h-5 w-5"
-        />
-        <label>Dummy Option</label>
-      </div>
+        //  </div>
 
 
 
-
-
-
-         </div>
           )}
 
 
