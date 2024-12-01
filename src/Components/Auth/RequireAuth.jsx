@@ -9,7 +9,7 @@ const RequireAuth = ({ allowedRoles }) => {
 
     return isLoggedIn && allowedRoles?.find((myRole) => myRole == role) ? (
         <Outlet />
-    ) : isLoggedIn ? (<Navigate to='/denied' />) : (<Navigate to="/login" />)
+    ) : isLoggedIn && (<Navigate to="/login" />)
 }
 
 export default RequireAuth
