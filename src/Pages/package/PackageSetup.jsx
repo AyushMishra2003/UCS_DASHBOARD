@@ -5,12 +5,20 @@ import HomeLayout from '../../Layouts/HomeLayouts';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { addPackage, getPackageCategory, getPackageInclude } from '../../Redux/Slices/packageSlice';
+import { addPackage, getPackageCategory, getPackageInclude, getPackageTag, updatePackage } from '../../Redux/Slices/packageSlice';
 import { MdDelete } from 'react-icons/md';
 import { Toaster, toast } from 'sonner'
+import { useLocation } from 'react-router-dom';
 
 const PackageSetup = () => {
     const [activeTab, setActiveTab] = useState(0);
+
+    const location=useLocation()
+
+    const {state}=location
+
+    console.log("state is",state);
+  
     const [basicDetails, setBasicDetails] = useState({
       packageName: '',
       fromDate: new Date(), // Initialize with current date
@@ -28,7 +36,10 @@ const PackageSetup = () => {
     const [photos, setPhotos] = useState([]);
     const [loading, setLoading] = useState(false);
     const [checkedItems, setCheckedItems] = useState([]); // State to store selected items
-    const [selectedCategory, setSelectedCategory] = useState(""); // State for selected category
+    const [selectedCategories, setSelectedCategories] = useState([]); // State for selected categories\
+
+    const [tagData,setTagData]=useState([])
+
 
     const fetchInclude = async () => {
       await dispatch(getPackageInclude());
@@ -42,8 +53,8 @@ const PackageSetup = () => {
     });
 
 
-    
-    const { packageCategory, packageInclude, error } = useSelector((state) => state.package);
+  
+    const { packageCategory, packageInclude, packageTag, error } = useSelector((state) => state.package);
 
     console.log(packageCategory,packageInclude);
     
@@ -127,81 +138,117 @@ const PackageSetup = () => {
       console.log('Edit day:', dayWiseData[index]);
     };
    
-    const handleCategoryChange = (e) => {
-      setSelectedCategory(e.target.value); // Update selected category
-    };
+    // const handleCategoryChange = (e) => {
+    //   setSelectedCategory(e.target.value); // Update selected category
+    // };
   
 
     // Submit button
-    const handleSubmit = async() => {
-      const formData = new FormData(); // Use FormData for handling files
-
+    const handleSubmit = async () => {
       setLoading(true)
-  
-      // Add basic details
+      const formData = new FormData();
+    
+      // Add basic fields to FormData
       formData.append('packageName', basicDetails.packageName);
       formData.append('dateFrom', basicDetails.fromDate.toISOString());
       formData.append('dateTo', basicDetails.toDate.toISOString());
       formData.append('duration', basicDetails.duration);
       formData.append('rate', basicDetails.rate);
       formData.append('location', basicDetails.location);
-  
-      // Add main photo
-      if (basicDetails.mainPhoto) {
-          formData.append('mainPhoto', basicDetails.mainPhoto);
+    
+      // Add mainPhoto to FormData (check if file exists)
+      if (basicDetails.mainPhoto instanceof File) {
+        formData.append('mainPhoto', basicDetails.mainPhoto);
       }
-  
-      // Add multiple photos
-      photos.forEach((photo, index) => {
-          formData.append(`photos`, photo);
-      });
-  
-      // Add inclusions and exclusions
+    
+      // Add photos to FormData (check if array is valid and contains files)
+      if (Array.isArray(photos) && photos.length > 0) {
+        photos.forEach((photo) => {
+          if (photo instanceof File) {
+            formData.append('photos', photo); // Multer will handle multiple files
+          }
+        });
+      }
+    
+      // Add other fields like inclusive, exclusive, etc.
       formData.append('inclusive', inclusive);
       formData.append('exclusive', exclusive);
-
-      formData.append('category', selectedCategory);
-  
-      // Add booking policy
       formData.append('bookingPolicy', bookingPolicy);
-  
-      // Add terms and conditions (if it's the same as booking policy, this can be adjusted)
       formData.append('termsAndCondition', termConditon);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-      // Add day-wise data
+
+  
+    
+      // Add day-wise data to FormData
       dayWiseData.forEach((day, index) => {
-          formData.append(`dayWise[${index}][date]`, day.date.toISOString());
-          formData.append(`dayWise[${index}][content]`, day.content);
+        formData.append(`dayWise[${index}][date]`, day.date.toISOString());
+        formData.append(`dayWise[${index}][content]`, day.content);
       });
 
-
-        // Add included details as an array
-  // Prepare the included items array similar to your example
+        // Prepare the included items array similar to your example
   const includedDetailsArray = [];
   checkedItems.forEach((item) => {
     includedDetailsArray.push(item); // Add checked items to the array
   });
 
+  const categoriesDetails=[]
+  
+  selectedCategories.forEach((item)=>{
+    categoriesDetails.push(item)
+  })
+
+   
+  const packageTag=[]
+
+  tagData.forEach((item)=>{
+      packageTag.push(item)
+  })
+
+
+
+
   // Append the array of included items to FormData
   formData.append('includedPackages', JSON.stringify(includedDetailsArray));
+  formData.append('categories', JSON.stringify(categoriesDetails));
+  formData.append("packageTag",JSON.stringify(tagData))
     
-      console.log(formData);
-     
-      const response=await dispatch(addPackage(formData))
+      try {
+        // Call your API
+        const response = state
+          ? await dispatch(updatePackage({ formData, id: state._id }))
+          : await dispatch(addPackage(formData));
+          
+          if(response?.payload?.package){
+                setBasicDetails({
+                  packageName: '',
+                  fromDate: new Date(), // Initialize with current date
+                  toDate: new Date(),   // Initialize with current date
+                  duration: '',
+                  rate: '',
+                  location: '',
+                  mainPhoto: null,
+                }
+            )
+            setInclusive('')
+            setExclusive('')
+            setBookingPolicy('')
+            setTermCondition('')
+            setPhotos([])
+            setIncludeDetails([])
+            setCheckedItems([])
+            setSelectedCategories([])
 
+          }   
+
+    
+        console.log('Response:', response);
+        setActiveTab(0)
+      } catch (error) {
+        console.error('Error while submitting:', error);
+      }
       setLoading(false)
 
-
-      
-      console.log(response);
-
-      setCheckedItems([])
-      
-
-      
-      
     };
-
+  
 
     const fetchData = async () => {
       const response = await dispatch(getPackageCategory());
@@ -238,9 +285,19 @@ const PackageSetup = () => {
           : [...prev, item] // Add if not already checked
       );
     };
+
+    const handleCheckboxTag = (item) => {
+      setTagData((prev) =>
+        prev.includes(item)
+          ? prev.filter((i) => i !== item) // Remove if already checked
+          : [...prev, item] // Add if not already checked
+      );
+    };
    
      
-   
+    const handlePackageTag=async()=>{
+        const response=await dispatch(getPackageTag())
+    }
 
 
     useEffect(()=>{
@@ -251,9 +308,41 @@ const PackageSetup = () => {
     fetchInclude()
     },[])
 
+    useEffect(()=>{
+        handlePackageTag() 
+    },[])
 
-    console.log(checkedItems);
-    
+
+      // Pre-fill logic
+  useEffect(() => {
+    if (state) {
+      // Set form fields with state data if available
+      setBasicDetails({
+        packageName: state.packageName || '',
+        fromDate: new Date(state.dateFrom) || new Date(),
+        toDate: new Date(state.dateTo) || new Date(),
+        duration: state.duration || '',
+        rate: state.rate || '',
+        location: state.location || '',
+        mainPhoto: state.mainPhoto || null,
+      });
+
+      setInclusive(state.inclusive || '');
+      setExclusive(state.exclusive || '');
+      setBookingPolicy(state.bookingPolicy || '');
+      setTermCondition(state.termsAndCondition || '');
+      setPhotos(state.photos || []);
+      setSelectedCategories(state.categoriesDetails || []);
+    }
+  }, [state]);
+
+
+
+
+  console.log(tagData);
+  
+
+
   
 
 
@@ -287,7 +376,6 @@ const PackageSetup = () => {
     'Booking Policy',
     'Terms and Conditions',
     'Day Wise',
-    'Submit Button',
   ].map((tab, index, array) => (
     <React.Fragment key={index}>
       {/* Tab Button */}
@@ -386,22 +474,6 @@ const PackageSetup = () => {
           placeholder="e.g., 1000"
         />
       </div>
-    </div>
-
-    {/* Location and Main Photo */}
-    <div className="flex space-x-6">
-      <div className="w-1/2">
-        <label>Location</label>
-        <input
-          type="text"
-          name="location"
-          value={basicDetails.location}
-          onChange={handleBasicDetailsChange}
-          className="w-full p-2 border border-gray-300 rounded-md"
-          placeholder="Enter location"
-        />
-      </div>
-
       <div className="w-1/2">
         <label>Main Photo</label>
         <input
@@ -411,10 +483,14 @@ const PackageSetup = () => {
         />
       </div>
     </div>
+
+
+
+
       <div className='flex items-start justify-between'>
       {/* include */}
        <div>
-        <h2 className="text-lg font-bold">Selcted Includes:-</h2>
+        <h2 className="text-md font-semibold">Selcted Includes:-</h2>
         {error && <p className="text-red-500">Error: {error}</p>}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-fit ">
@@ -435,36 +511,97 @@ const PackageSetup = () => {
         </div>
 
       </div>
+
+      {/* tag Name */}
+      <div>
+        <h2 className="text-md font-semibold">Select Tag-</h2>
+        {error && <p className="text-red-500">Error: {error}</p>}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-fit ">
+          {packageTag?.map((include, index) => (
+            <div key={index} className="flex items-center">
+              <input
+                type="checkbox"
+                id={`include-${index}`}
+                className="mr-2"
+                checked={tagData.includes(include.tagName)}
+                onChange={() => handleCheckboxTag(include.tagName)}
+              />
+              <label htmlFor={`include-${index}`} className="text-sm">
+                {include.tagName}
+              </label>
+            </div>
+          ))}
+        </div>
+
+      </div>
+
       {/* <div className="flex space-x-6"> */}
-      <div className="w-1/2">
-        {/* Dropdown for selecting a category */}
-        <div className="mb-4 items-end">
-          <label htmlFor="category" className="block text-sm font-medium text-gray-700">
-            Select a Category:
-          </label>
-          <select
-            id="category"
-            className="mt-1 block w-full border border-gray-300 bg-white rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            value={selectedCategory}
-            onChange={handleCategoryChange}
-          >
-            <option value="">-- Select a Category --</option>
-            {packageCategory?.map((category) => (
-              <option key={category._id} value={category.categoryName}>
-                {category.categoryName}
-              </option>
-            ))}
-          </select>
-        </div>
+      <div className="mb-4">
+  <h2 className="block text-sm font-normal text-black">Select Categories:</h2>
+  {packageCategory?.map((category) => (
+    <div key={category._id} className="flex items-center mb-2">
+      <input
+        type="checkbox"
+        id={`category-${category._id}`}
+        className="mr-2"
+        value={category.categoryName}
+        checked={selectedCategories.includes(category.categoryName)} // Check if category is selected
+        onChange={(e) => {
+          if (e.target.checked) {
+            // Add the selected category
+            setSelectedCategories([...selectedCategories, category.categoryName]);
+          } else {
+            // Remove the unselected category
+            setSelectedCategories(
+              selectedCategories.filter((cat) => cat !== category.categoryName)
+            );
+          }
+        }}
+      />
+      <label htmlFor={`category-${category._id}`} className="text-sm">
+        {category.categoryName}
+      </label>
+      
+      
+
+
+    </div>
+   
+   
+
+  ))}
         </div>
 
-        </div> 
+
+      </div> 
+
+      {/* Navigation Buttons */}
+      <div className="flex justify-between mt-6">
+            <button
+              disabled={activeTab === 0}
+              onClick={() => setActiveTab(activeTab - 1)}
+              className={`px-6 py-2 rounded-md ${
+                activeTab === 0
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-blue-500 text-white hover:bg-blue-600'
+              }`}
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => setActiveTab(activeTab + 1)}
+              className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            >
+              Next
+            </button>
+          </div>
+
+      
+
+
         </div>
-    
         //  </div>
-
-
-
           )}
 
 
@@ -490,35 +627,51 @@ const PackageSetup = () => {
 
             {/* Display the uploaded photos */}
             {photos.length > 0 && (
-              <div className="mt-4">
-                <h2 className="text-xl font-semibold mb-4">Uploaded Photos</h2>
-                <div className="grid grid-cols-3 gap-4">
-                  {photos.map((photo, index) => (
-                    <div key={index} className="relative">
-                      <img
-                        src={URL.createObjectURL(photo)}
-                        alt={`Uploaded Photo ${index + 1}`}
-                        className="w-full h-32 object-cover rounded-md"
-                      />
-                      <div className="absolute top-0 right-0 p-2 bg-black bg-opacity-50">
-                        <button
-                          onClick={() => handleDeletePhoto(index)}
-                          className="text-white mr-2"
-                        >
-                          <MdDelete className='text-red-500 text-2xl'/>
-                        </button>
-                        {/* <button
-                          onClick={() => handleEditPhoto(index)}
-                          className="text-white"
-                        >
-                          Edit
-                        </button> */}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+  <div className="mt-4">
+    <h2 className="text-xl font-semibold mb-4">Uploaded Photos</h2>
+    <div className="grid grid-cols-3 gap-4">
+      {photos.map((photo, index) => (
+        <div key={index} className="relative">
+          <img
+            src={photo instanceof Blob ? URL.createObjectURL(photo) : photo?.secure_url}
+            alt={`Uploaded Photo ${index + 1}`}
+            className="w-full h-32 object-cover rounded-md"
+          />
+          <div className="absolute top-0 right-0 p-2 bg-black bg-opacity-50">
+            <button
+              onClick={() => handleDeletePhoto(index)}
+              className="text-white mr-2"
+            >
+              <MdDelete className="text-red-500 text-2xl" />
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+             )}
+
+             {/* Navigation Buttons */}
+          <div className="flex justify-between mt-6">
+            <button
+              disabled={activeTab === 0}
+              onClick={() => setActiveTab(activeTab - 1)}
+              className={`px-6 py-2 rounded-md ${
+                activeTab === 0
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-blue-500 text-white hover:bg-blue-600'
+              }`}
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => setActiveTab(activeTab + 1)}
+              className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            >
+              Next
+            </button>
+          </div>
+
           </div>
         )}
 
@@ -527,13 +680,54 @@ const PackageSetup = () => {
           <div className="mt-4 max-w-4xl mx-auto">
             <label>Inclusive</label>
             <ReactQuill value={inclusive} onChange={setInclusive} className="w-full" />
+            {/* Navigation Buttons */}
+          <div className="flex justify-between mt-6">
+            <button
+              disabled={activeTab === 0}
+              onClick={() => setActiveTab(activeTab - 1)}
+              className={`px-6 py-2 rounded-md ${
+                activeTab === 0
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-blue-500 text-white hover:bg-blue-600'
+              }`}
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => setActiveTab(activeTab + 1)}
+              className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            >
+              Next
+            </button>
           </div>
+          </div>
+          
         )}
 
         {activeTab === 3 && (
           <div className="mt-4 max-w-4xl mx-auto">
             <label>Exclusive</label>
             <ReactQuill value={exclusive} onChange={setExclusive} className="w-full" />
+             {/* Navigation Buttons */}
+          <div className="flex justify-between mt-6">
+            <button
+              disabled={activeTab === 0}
+              onClick={() => setActiveTab(activeTab - 1)}
+              className={`px-6 py-2 rounded-md ${
+                activeTab === 0
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-blue-500 text-white hover:bg-blue-600'
+              }`}
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => setActiveTab(activeTab + 1)}
+              className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            >
+              Next
+            </button>
+          </div>
           </div>
         )}
 
@@ -541,6 +735,26 @@ const PackageSetup = () => {
           <div className="mt-4 max-w-4xl mx-auto">
             <label>Booking Policy</label>
             <ReactQuill value={bookingPolicy} onChange={setBookingPolicy} className="w-full" />
+            {/* Navigation Buttons */}
+          <div className="flex justify-between mt-6">
+            <button
+              disabled={activeTab === 0}
+              onClick={() => setActiveTab(activeTab - 1)}
+              className={`px-6 py-2 rounded-md ${
+                activeTab === 0
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-blue-500 text-white hover:bg-blue-600'
+              }`}
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => setActiveTab(activeTab + 1)}
+              className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            >
+              Next
+            </button>
+          </div>
           </div>
         )}
 
@@ -549,6 +763,26 @@ const PackageSetup = () => {
           <div className="mt-4 max-w-4xl mx-auto">
             <label>Term and Conditions</label>
             <ReactQuill value={termConditon} onChange={setTermCondition} className="w-full" />
+            {/* Navigation Buttons */}
+          <div className="flex justify-between mt-6">
+            <button
+              disabled={activeTab === 0}
+              onClick={() => setActiveTab(activeTab - 1)}
+              className={`px-6 py-2 rounded-md ${
+                activeTab === 0
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-blue-500 text-white hover:bg-blue-600'
+              }`}
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => setActiveTab(activeTab + 1)}
+              className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            >
+              Next
+            </button>
+          </div>  
           </div>
         )}
 
@@ -614,22 +848,34 @@ const PackageSetup = () => {
   </div>
 
   {/* Pagination */}
-  <div className="flex justify-between items-center">
-    <button
-      onClick={() => handlePageChange({ selected: currentPage - 1 })}
-      disabled={currentPage === 0}
-      className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition duration-300"
-    >
-      Prev
-    </button>
-    <button
-      onClick={() => handlePageChange({ selected: currentPage + 1 })}
-      disabled={(currentPage + 1) * itemsPerPage >= dayWiseData.length}
-      className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition duration-300"
-    >
-      Next
-    </button>
-  </div>
+{/* Navigation Buttons */}
+<div className="flex justify-between mt-6">
+            <button
+              disabled={activeTab === 0}
+              onClick={() => setActiveTab(activeTab - 1)}
+              className={`px-6 py-2 rounded-md ${
+                activeTab === 0
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-blue-500 text-white hover:bg-blue-600'
+              }`}
+            >
+              Previous
+            </button>
+            <div className="mt-6 flex justify-center">
+              <button
+                className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-300"
+                onClick={() => handleSubmit()}
+              >
+                {loading ? (
+        <div className="w-6 h-6 border-4 border-t-4 border-white border-solid rounded-full animate-spin"></div>  // Spinner
+      ) : (
+        "Submit Package" 
+      )}
+
+                
+              </button>
+            </div>
+          </div>
 </div>
 
         )}
@@ -663,3 +909,4 @@ const PackageSetup = () => {
 };
 
 export default PackageSetup;
+

@@ -310,6 +310,18 @@ const HomeLayout = ({ children }) => {
                                     Add Package
                                 </NavLink>
                             </li>
+                            <li>
+                                <NavLink to={'/package/query'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                    <FaCar />
+                                    View Query
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink to={'/package/setup'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                    <FaCar />
+                                    Package Setup
+                                </NavLink>
+                            </li>
                                        
                                     </ul>
                                 )}

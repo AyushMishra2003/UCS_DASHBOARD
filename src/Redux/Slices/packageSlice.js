@@ -7,7 +7,10 @@ const initialState = {
     error: null,
     operators: [],
     packageCategory:[],
-    packageInclude:[]
+    packageInclude:[],
+    packageData:[],
+    packageTag:[],
+    queryData:[]
 };
 
 
@@ -36,6 +39,51 @@ export const addPackage = createAsyncThunk('/add/package', async (formData, { re
         return rejectWithValue(e?.response?.data);
     }
 });
+
+export const updatePackage = createAsyncThunk('/update/package', async ({formData,id}, { rejectWithValue }) => {
+    try {
+        console.log("form data is",formData);
+        
+        const res = await axiosInstance1.put(`/package/${id}`, formData);
+        console.log(res)
+        
+        toast.success(res.data.message);
+        return res.data;
+    } catch (e) {
+        toast.error(e?.response?.data?.message);
+        return rejectWithValue(e?.response?.data);
+    }
+});
+
+export const getPackage = createAsyncThunk('/get/package', async (_, { rejectWithValue }) => {
+    try {
+        
+        const res = await axiosInstance1.get('/package');
+       
+        
+        toast.success(res.data.message);
+        return res.data;
+    } catch (e) {
+        toast.error(e?.response?.data?.message);
+        return rejectWithValue(e?.response?.data);
+    }
+});
+
+
+export const deletePackage = createAsyncThunk('/delete/package', async (id, { rejectWithValue }) => {
+    try {
+        
+        const res = await axiosInstance1.delete(`/package/${id}`);
+    
+        toast.success(res.data.message);
+        return res.data;
+    } catch (e) {
+        toast.error(e?.response?.data?.message);
+        return rejectWithValue(e?.response?.data);
+    }
+});
+
+
 
 export const getPackageCategory = createAsyncThunk(
     'package/getPackageCategory',
@@ -125,12 +173,16 @@ export const deletePackageCategory = createAsyncThunk(
 
 export const addPackageInclude = createAsyncThunk(
     'package/addPackageCategory',
-    async (includeName,{ rejectWithValue }) => {
+    async (data,{ rejectWithValue }) => {
         try {
-           
+            
+            const formData=new FormData()
+
+            formData.append("includeName",data.includeName)
+            formData.append("includePhoto",data.includePhoto)
             
                         
-            const response = await axiosInstance1.post(`/package/include`,{includeName});
+            const response = await axiosInstance1.post(`/package/include`,formData);
             console.log(response);
             
             // toast.success(response.data.message);
@@ -150,9 +202,14 @@ export const editPackageInclude = createAsyncThunk(
             console.log("edit package include",data);
 
             const includeName=data.includeName
+
+            const formData=new FormData()
+            
+            formData.append("includeName",data?.includeName)
+            formData.append("includePhoto",data?.includePhoto)
             
                      
-            const response = await axiosInstance1.put(`/package/include/${data.id}`,{includeName})
+            const response = await axiosInstance1.put(`/package/include/${data.id}`,formData)
             console.log(response);
             
             // toast.success(response.data.message);
@@ -184,9 +241,6 @@ export const deletePackageInclude = createAsyncThunk(
     }
 );
 
-
-
-
 export const getPackageInclude = createAsyncThunk(
     'package/getPackageInclude',
     async (_,{ rejectWithValue }) => {
@@ -205,11 +259,6 @@ export const getPackageInclude = createAsyncThunk(
         }
     }
 );
-
-
-
-
-
 
 export const addOperator = createAsyncThunk('/admin/add', async (data, { rejectWithValue }) => {
     try {
@@ -233,6 +282,101 @@ export const getOperators = createAsyncThunk('/admin/operators', async (_, { rej
     }
 });
 
+
+
+
+export const getPackageTag = createAsyncThunk(
+    'package/getPackageTag',
+    async (_,{ rejectWithValue }) => {
+        try {
+                 console.log("i am coming or not");
+                  
+            const response = await axiosInstance1.get(`/package/tag`);
+            console.log(response);
+            
+            // toast.success(response.data.message);
+            return response.data.data;
+        } catch (error) {
+            toast.error(error?.response?.data?.message || 'Failed to get Tag');
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+export const addPackageTag = createAsyncThunk(
+    'package/addPackageTag',
+    async (data,{ rejectWithValue }) => {
+        try {
+                     
+           const response = await axiosInstance1.post(`/package/tag`,data);
+            console.log(response);
+            
+            // toast.success(response.data.message);
+            return response.data.data;
+        } catch (error) {
+            toast.error(error?.response?.data?.message || 'Failed to add Tag');
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+export const editPackageTag = createAsyncThunk(
+    'package/editPackageTag',
+    async (data,{ rejectWithValue }) => {
+        try {             
+            const response = await axiosInstance1.put(`/package/tag/${data.id}`,data);
+            console.log(response);
+            
+            // toast.success(response.data.message);
+            return response.data.data;
+        } catch (error) {
+            toast.error(error?.response?.data?.message || 'Failed to edit Tag');
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+export const deletePackageTag = createAsyncThunk(
+    'package/deletePackageTag',
+    async (id,{ rejectWithValue }) => {
+        try {
+            console.log("get package category");
+            
+                        
+            const response = await axiosInstance1.delete(`/package/tag/${id}`);
+            console.log(response);
+            
+            // toast.success(response.data.message);
+            return response.data;
+        } catch (error) {
+            toast.error(error?.response?.data?.message || 'Failed to Delete Tag');
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+export const getPackageQuery = createAsyncThunk(
+    'package/getPackageQuery',
+    async (_,{ rejectWithValue }) => {
+        try {
+            
+                  
+            const response = await axiosInstance1.get(`/query`);
+            console.log(response);
+            
+            // toast.success(response.data.message);
+            return response.data.data;
+        } catch (error) {
+            toast.error(error?.response?.data?.message || 'Failed to get Tag');
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+
+
+
+
 const packageSlice = createSlice({
     name: "package",
     initialState,
@@ -251,6 +395,21 @@ const packageSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
+            .addCase(getPackage.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(getPackageTag.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(getPackageQuery.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            
+
+
             .addCase(changeStatus.fulfilled, (state, action) => {
                 state.loading = false;
                 // Find the operator in the list and update their status
@@ -273,7 +432,34 @@ const packageSlice = createSlice({
                 state.loading=false
                 state.error=false
              })
+             .addCase(getPackage.fulfilled, (state, action) => {
+                state.packageData = action?.payload?.data
+                state.loading = false
+                state.error = false
+             })
+            .addCase(getPackageTag.fulfilled, (state, action) => {
+                console.log("tag is",action);
+                
+                state.packageTag = action?.payload
+                state.loading = false
+                state.error = false
+             })
+             .addCase(getPackageQuery.fulfilled, (state, action) => {
+    
+                
+                state.queryData = action?.payload
+                state.loading = false
+                state.error = false
+             })
+
+
+
+
             .addCase(changeStatus.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload || 'Failed to change status';
+            })
+            .addCase(getPackage.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload || 'Failed to change status';
             })
@@ -292,7 +478,13 @@ const packageSlice = createSlice({
             .addCase(getPackageCategory.rejected, (state, action) => {
                 state.error = action?.payload?.success
             })
+            .addCase(getPackageTag.rejected, (state, action) => {
+                state.error = action?.payload?.success
+            })
             .addCase(getPackageInclude.rejected, (state, action) => {
+                state.error = action?.payload?.success
+            })
+            .addCase(getPackageQuery.rejected, (state, action) => {
                 state.error = action?.payload?.success
             });
 

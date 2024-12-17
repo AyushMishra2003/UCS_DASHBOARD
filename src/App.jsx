@@ -81,6 +81,7 @@ import PackageSetup from './Pages/package/PackageSetup'
 import ViewPackage from './Pages/package/ViewPackage'
 import ChangePackageSetup from './Pages/package/ChangePackageSetup'
 import DemoPackages from './Pages/package/Demo'
+import PackageQuery from './Pages/package/PackageQuery'
 
 const App = () => {
   return (
@@ -190,6 +191,7 @@ const App = () => {
            <Route path='/add/package' element={<PackageSetup/>} />
            <Route path='/view/package' element={<ViewPackage/>} />
            <Route path='/package/setup' element={<ChangePackageSetup/>} />
+           <Route path='/package/query' element={<PackageQuery/>} />
 
            <Route path='/demo/package' element={<DemoPackages/>} />
 
