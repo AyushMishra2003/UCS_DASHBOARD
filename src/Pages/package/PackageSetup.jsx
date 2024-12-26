@@ -37,7 +37,6 @@ const PackageSetup = () => {
     const [loading, setLoading] = useState(false);
     const [checkedItems, setCheckedItems] = useState([]); // State to store selected items
     const [selectedCategories, setSelectedCategories] = useState([]); // State for selected categories\
-
     const [tagData,setTagData]=useState([])
 
 
@@ -176,11 +175,12 @@ const PackageSetup = () => {
       formData.append('bookingPolicy', bookingPolicy);
       formData.append('termsAndCondition', termConditon);
 
-  
+       console.log("day wise is",dayWiseData);
+       
     
       // Add day-wise data to FormData
       dayWiseData.forEach((day, index) => {
-        formData.append(`dayWise[${index}][date]`, day.date.toISOString());
+        formData.append(`dayWise[${index}][date]`, index+1);
         formData.append(`dayWise[${index}][content]`, day.content);
       });
 
@@ -207,6 +207,10 @@ const PackageSetup = () => {
 
 
   // Append the array of included items to FormData
+   
+  console.log("in include arrayy ",includedDetailsArray);
+  
+
   formData.append('includedPackages', JSON.stringify(includedDetailsArray));
   formData.append('categories', JSON.stringify(categoriesDetails));
   formData.append("packageTag",JSON.stringify(tagData))
@@ -216,6 +220,10 @@ const PackageSetup = () => {
         const response = state
           ? await dispatch(updatePackage({ formData, id: state._id }))
           : await dispatch(addPackage(formData));
+
+          console.log("submit response is",response);
+           
+          
           
           if(response?.payload?.package){
                 setBasicDetails({
@@ -236,8 +244,10 @@ const PackageSetup = () => {
             setIncludeDetails([])
             setCheckedItems([])
             setSelectedCategories([])
+            setTagData([])
+            
 
-          }   
+          }
 
     
         console.log('Response:', response);
@@ -332,7 +342,16 @@ const PackageSetup = () => {
       setBookingPolicy(state.bookingPolicy || '');
       setTermCondition(state.termsAndCondition || '');
       setPhotos(state.photos || []);
-      setSelectedCategories(state.categoriesDetails || []);
+      setSelectedCategories(state?.categoriesDetails || []);
+      setCheckedItems(state?.includedDetails || []);
+      setTagData(state?.packageTagDetail || []);
+      if (Array.isArray(state.dayWise)) {
+        const formattedDayWise = state.dayWise.map((day) => ({
+          date: new Date(day.date), // Convert date strings to Date objects
+          content: day.description || '', // Default to empty string if no content
+        }));
+        setDayWiseData(formattedDayWise);
+      }
     }
   }, [state]);
 
@@ -376,6 +395,7 @@ const PackageSetup = () => {
     'Booking Policy',
     'Terms and Conditions',
     'Day Wise',
+    'Submit'
   ].map((tab, index, array) => (
     <React.Fragment key={index}>
       {/* Tab Button */}
@@ -474,6 +494,9 @@ const PackageSetup = () => {
           placeholder="e.g., 1000"
         />
       </div>
+
+
+      
       <div className="w-1/2">
         <label>Main Photo</label>
         <input
@@ -787,70 +810,109 @@ const PackageSetup = () => {
         )}
 
 
-        {activeTab === 6 && (
-          <div className="space-y-4 max-w-5xl mx-auto">
-  {/* Add Day Wise Button */}
-  <button
-    onClick={handleAddDayWise}
-    className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
-  >
-    Add Day
-  </button>
+{activeTab === 6 && (
+  <div className="space-y-4 max-w-5xl mx-auto">
+    {/* Add Day Wise Button */}
+    <button
+      onClick={handleAddDayWise}
+      className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+    >
+      Add Day
+    </button>
 
-  {/* Day-wise content and date */}
-  <div className="space-y-6">
-    {dayWiseData.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage).map((day, index) => {
-      const actualIndex = currentPage * itemsPerPage + index + 1; // Absolute day number
-      return (
-        <div key={actualIndex} className="bg-white p-4 rounded-lg shadow-lg space-y-4">
-          {/* Container for date and content */}
-          <div className="flex items-start space-x-6 ">
-            {/* Day Number Section */}
-            <div className="flex flex-col items-start space-y-4 w-[30%]">
-              <div className="flex items-center space-x-2">
-                <label className="text-sm font-medium text-gray-700">Day:</label>
-                <input
-                  type="number"
-                  value={actualIndex} // Shows the absolute day number
-                  readOnly
-                  className="text-gray-700 bg-gray-100 px-2 py-1 rounded-md w-16 text-center"
-                />
+    {/* Day-wise content and date */}
+    <div className="space-y-6">
+      {dayWiseData
+        .slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
+        .map((day, index) => {
+          const actualIndex = currentPage * itemsPerPage + index + 1; // Absolute day number
+          return (
+            <div key={actualIndex} className="bg-white p-4 rounded-lg shadow-lg space-y-4">
+              {/* Container for date and content */}
+              <div className="flex items-start space-x-6">
+                {/* Day Number Section */}
+                <div className="flex flex-col items-start space-y-4 w-[30%]">
+                  <div className="flex items-center space-x-2">
+                    <label className="text-sm font-medium text-gray-700">Day:</label>
+                    <input
+                      type="number"
+                      value={actualIndex} // Shows the absolute day number
+                      readOnly
+                      className="text-gray-700 bg-gray-100 px-2 py-1 rounded-md w-16 text-center"
+                    />
+                  </div>
+
+                  {/* Delete Button */}
+                  <button
+                    onClick={() => handleDeleteDay(currentPage * itemsPerPage + index)} // Pass the correct index
+                    className="bg-red-500 w-fit text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300"
+                  >
+                    Delete
+                  </button>
+                </div>
+
+                {/* React Quill Editor Section */}
+                <div className="w-[65%]">
+                  <ReactQuill
+                    value={day.content}
+                    onChange={(value) =>
+                      handleDayWiseChange(currentPage * itemsPerPage + index, value) // Update content
+                    }
+                    placeholder="Enter day content"
+                    className="rounded-lg p-3 border focus:ring-2 focus:ring-blue-500"
+                    style={{
+                      maxHeight: '200px', // Set the max height
+                      overflowY: 'auto', // Enable vertical scroll
+                    }}
+                  />
+                </div>
               </div>
-
-              {/* Delete Button */}
-              <button
-                onClick={() => handleDeleteDay(currentPage * itemsPerPage + index)} // Pass the correct index
-                className="bg-red-500 w-fit text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300"
-              >
-                Delete
-              </button>
             </div>
+          );
+        })}
+    </div>
 
-            {/* React Quill Editor Section */}
-            <div className="w-[65%]">
-              <ReactQuill
-                value={day.content}
-                onChange={(value) =>
-                  handleDayWiseChange(currentPage * itemsPerPage + index, value) // Update content
-                }
-                placeholder="Enter day content"
-                className="rounded-lg p-3 border focus:ring-2 focus:ring-blue-500"
-                style={{
-                  maxHeight: '200px', // Set the max height
-                  overflowY: 'auto', // Enable vertical scroll
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      );
-    })}
-  </div>
+    {/* Day-wise Navigation */}
+    <div className="flex justify-between mt-6">
+      {/* Previous Day Button */}
+      <button
+        onClick={() => {
+          if (currentPage > 0) {
+            setCurrentPage(currentPage - 1);
+          }
+        }}
+        className={`px-4 py-2 bg-gray-200 text-sm rounded-md hover:bg-gray-300 ${
+          currentPage === 0 ? 'cursor-not-allowed text-gray-500' : 'text-gray-700'
+        }`}
+        disabled={currentPage === 0}
+      >
+        Previous Day
+      </button>
 
-  {/* Pagination */}
-{/* Navigation Buttons */}
-<div className="flex justify-between mt-6">
-            <button
+      {/* Next Day Button */}
+      <button
+        onClick={() => {
+          if ((currentPage + 1) * itemsPerPage < dayWiseData.length) {
+            setCurrentPage(currentPage + 1);
+          }
+        }}
+        className={`px-4 py-2 bg-gray-200 text-sm rounded-md hover:bg-gray-300 ${
+          (currentPage + 1) * itemsPerPage >= dayWiseData.length ? 'cursor-not-allowed text-gray-500' : 'text-gray-700'
+        }`}
+        disabled={(currentPage + 1) * itemsPerPage >= dayWiseData.length}
+      >
+        Next Day
+      </button>
+    </div>
+
+    {/* Pagination (Previous and Next Page) */}
+    <div className="flex  justify-between mt-6">
+      <div>
+        
+      </div>
+    
+
+      <button
               disabled={activeTab === 0}
               onClick={() => setActiveTab(activeTab - 1)}
               className={`px-6 py-2 rounded-md ${
@@ -861,24 +923,17 @@ const PackageSetup = () => {
             >
               Previous
             </button>
-            <div className="mt-6 flex justify-center">
-              <button
-                className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-300"
-                onClick={() => handleSubmit()}
-              >
-                {loading ? (
-        <div className="w-6 h-6 border-4 border-t-4 border-white border-solid rounded-full animate-spin"></div>  // Spinner
-      ) : (
-        "Submit Package" 
-      )}
+            <button
+              onClick={() => setActiveTab(activeTab + 1)}
+              className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            >
+              Next
+            </button>
+    </div>
+  </div>
+)}
 
-                
-              </button>
-            </div>
-          </div>
-</div>
 
-        )}
 
        {/* Submit Button in the Last Tab */}
        {activeTab === 7 && (

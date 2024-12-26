@@ -5,6 +5,8 @@ import { useLocation } from 'react-router-dom'
 import HomeLayout from '../../Layouts/HomeLayouts'
 import TextEditor from '../TextEditor/TextEditor'
 import { FaEdit } from 'react-icons/fa'
+import { FaDeleteLeft } from 'react-icons/fa6'
+import { MdDelete } from 'react-icons/md'
 
 const WebsiteMoreDetails = () => {
   
@@ -95,6 +97,12 @@ const WebsiteMoreDetails = () => {
                 onClick={() => handleAddNew(section)}
               >
                 <FaEdit/>
+              </button>
+              <button
+                className="bg-blue-500 text-white px-2 py-1 rounded"
+                onClick={() => handleAddNew(section)}
+              >
+                <MdDelete/>
               </button>
               {/* <button
                 className="bg-blue-500 text-white px-2 py-1 rounded"

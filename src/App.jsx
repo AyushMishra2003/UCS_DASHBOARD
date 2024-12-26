@@ -96,6 +96,9 @@ const App = () => {
           <Route path='/global-settings' element={<GlobalSettingsPage />} />
           <Route path='/operator' element={<OperatorList/>} />
           <Route path='/add' element={<AddOperatorPage/>} />
+
+
+
           <Route path='/website-content' element={<WebsiteContent />} />
           <Route path='/website-content/details/:name' element={<WebsiteDetails/>} />
           <Route path='/website-content/child' element={<WebsiteMoreDetails/>} />
@@ -104,6 +107,9 @@ const App = () => {
           <Route path='/website-content/about' element={<AboutContent />} />
           <Route path='/website-content/contact' element={<ContactContent />} />
           <Route path='/website-content/testimonial' element={<TestimonialWebsite />} />
+
+
+          
           <Route path='/car-list' element={<CarsList />} />
          
           <Route path='/boat/:id' element={<BoatDetail />} />
@@ -192,7 +198,6 @@ const App = () => {
            <Route path='/view/package' element={<ViewPackage/>} />
            <Route path='/package/setup' element={<ChangePackageSetup/>} />
            <Route path='/package/query' element={<PackageQuery/>} />
-
            <Route path='/demo/package' element={<DemoPackages/>} />
 
 
