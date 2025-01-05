@@ -5,6 +5,7 @@ import HomeLayout from '../../Layouts/HomeLayouts';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useDispatch, useSelector } from 'react-redux';
+import { RxCross1 } from "react-icons/rx";
 import { addPackage, getPackageCategory, getPackageInclude, getPackageTag, updatePackage } from '../../Redux/Slices/packageSlice';
 import { MdDelete } from 'react-icons/md';
 import { Toaster, toast } from 'sonner'
@@ -12,6 +13,7 @@ import { useLocation } from 'react-router-dom';
 
 const PackageSetup = () => {
     const [activeTab, setActiveTab] = useState(0);
+    
 
     const location=useLocation()
 
@@ -37,7 +39,13 @@ const PackageSetup = () => {
     const [loading, setLoading] = useState(false);
     const [checkedItems, setCheckedItems] = useState([]); // State to store selected items
     const [selectedCategories, setSelectedCategories] = useState([]); // State for selected categories\
-    const [tagData,setTagData]=useState([])
+    const [tagData,setTagData]=useState([])  
+    const [customValue, setCustomValue] = useState("");
+    const [selectedValue, setSelectedValue] = useState("");
+    const [destinationType, setDestinationType] = useState("");
+    const [routes,setRoutes]=useState([])
+    
+  
 
 
     const fetchInclude = async () => {
@@ -55,14 +63,30 @@ const PackageSetup = () => {
   
     const { packageCategory, packageInclude, packageTag, error } = useSelector((state) => state.package);
 
-    console.log(packageCategory,packageInclude);
+
+
+    const handleSelectChange = (event) => {
+      console.log(event);
+      
+      const value = event.target.value;
+      if (value === "custom") {
+        setSelectedValue(""); // Clear the selected value
+      } else {
+        setSelectedValue(value);
+        setCustomValue(""); // Clear the custom value
+      }
+    };
+  
+    const handleCustomInputChange = (event) => {
+      setCustomValue(event.target.value);
+      setSelectedValue(""); // Clear the selected value
+    };
+  
     
-    
-   
+  
     const dispatch=useDispatch()
 
 
-    
     const handleTabChange = (index) => setActiveTab(index);
     
     const handleBasicDetailsChange = (e) => {
@@ -99,6 +123,8 @@ const PackageSetup = () => {
       // for now we'll just log the index to show the image being selected for editing.
       console.log('Edit photo:', photos[index]);
     };
+
+    
     
     const [dayWiseData, setDayWiseData] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
@@ -140,6 +166,10 @@ const PackageSetup = () => {
     // const handleCategoryChange = (e) => {
     //   setSelectedCategory(e.target.value); // Update selected category
     // };
+   
+    const handleDestinationTypeChange = (e) => {
+      setDestinationType(e.target.value);
+    };
   
 
     // Submit button
@@ -174,8 +204,12 @@ const PackageSetup = () => {
       formData.append('exclusive', exclusive);
       formData.append('bookingPolicy', bookingPolicy);
       formData.append('termsAndCondition', termConditon);
+      formData.append('rateBy',customValue)
+      formData.append('destinationType',destinationType)
 
-       console.log("day wise is",dayWiseData);
+
+      formData.append('routes',JSON.stringify(routes))
+  
        
     
       // Add day-wise data to FormData
@@ -208,7 +242,7 @@ const PackageSetup = () => {
 
   // Append the array of included items to FormData
    
-  console.log("in include arrayy ",includedDetailsArray);
+ 
   
 
   formData.append('includedPackages', JSON.stringify(includedDetailsArray));
@@ -262,7 +296,20 @@ const PackageSetup = () => {
 
     const fetchData = async () => {
       const response = await dispatch(getPackageCategory());
-      console.log(response);
+ 
+    };
+
+      // Function to handle adding a new route
+  const addRoute = (newRoute) => {
+    if (routes.length < 4 && newRoute.trim() !== '') {
+      setRoutes((prevRoutes) => [...prevRoutes, newRoute.trim()]);
+    }
+  };
+
+    // Function to handle removing a route
+    const removeRoute = (index) => {
+      const updatedRoutes = routes.filter((_, i) => i !== index);
+      setRoutes(updatedRoutes);
     };
      
      
@@ -352,17 +399,16 @@ const PackageSetup = () => {
         }));
         setDayWiseData(formattedDayWise);
       }
+      setCustomValue(state?.rateBy || "")
+      setDestinationType(state?.destinationType || "")
+      setRoutes(state?.routesDetail || [])
     }
   }, [state]);
 
 
-
-
-  console.log(tagData);
+  console.log("routes is ",routes);
   
 
-
-  
 
 
   return (
@@ -370,22 +416,7 @@ const PackageSetup = () => {
       <div className=" mx-auto">
 
         <h1 className='text-center mb-10 text-black font-bold text-4xl'>PACKAGE ADDED </h1>
-        {/* Tabs */}
-        {/* <div className="flex space-x-4 mb-6 mx-auto items-center justify-center py-2 border border-red-500">
-          {['Basic Details', 'Photos', 'Inclusive', 'Exclusive Terms', 'Booking Policy', 'Terms and Conditions', 'Day Wise','Submit Button'].map((tab, index) => (
-            <button
-              key={index}
-              className={`px-4 py-2 rounded-md shadow-lg transition ${
-                activeTab === index
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-200 hover:bg-gray-300'
-              }`}
-              onClick={() => handleTabChange(index)}
-            >
-              {tab}
-            </button>
-          ))}
-        </div> */}
+
         <div className="flex items-center justify-center space-x-4 mb-6 mx-auto py-2 border-b-2 border-[#e9dddd]">
   {[
     'Basic Details',
@@ -395,6 +426,7 @@ const PackageSetup = () => {
     'Booking Policy',
     'Terms and Conditions',
     'Day Wise',
+    'Routes',
     'Submit'
   ].map((tab, index, array) => (
     <React.Fragment key={index}>
@@ -425,98 +457,85 @@ const PackageSetup = () => {
 
 
        <div className='container mx-auto '>
-       {/* <button onClick={() => toast('My first toast')}>
-        Give me a toast
-      </button> */}
    
 
         {/* Tab Content */}
         {activeTab === 0 && (
-        <div className="space-y-6 border-2 border-gray-300 p-6 max-w-4xl mx-auto mt-10">
+    <div className="space-y-8 border-2 border-gray-300 p-8 max-w-5xl mx-auto mt-10 bg-white rounded-md shadow-md">
     {/* Package Name and Date */}
-    <div className="flex space-x-6">
-      <div className="w-1/2">
-        <label>Package Name</label>
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Package Name</label>
         <input
           type="text"
           name="packageName"
           value={basicDetails.packageName}
           onChange={handleBasicDetailsChange}
-          className="w-full p-2 border border-gray-300 rounded-md"
+          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
           placeholder="Enter package name"
         />
       </div>
-
-      <div className="w-1/2">
-        <label>Date</label>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
         <div className="flex space-x-4">
           {/* From Date */}
           <DatePicker
             selected={basicDetails.fromDate}
             onChange={(date) => handleDateChange('fromDate', date)}
-            className="w-full p-2 border border-gray-300 rounded-md"
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
             dateFormat="yyyy-MM-dd"
           />
-
           {/* To Date */}
           <DatePicker
             selected={basicDetails.toDate}
             onChange={(date) => handleDateChange('toDate', date)}
-            className="w-full p-2 border border-gray-300 rounded-md"
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
             dateFormat="yyyy-MM-dd"
           />
         </div>
       </div>
     </div>
-
+  
     {/* Duration and Rate */}
-    <div className="flex space-x-6">
-      <div className="w-1/2">
-        <label>Duration (in days)</label>
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Duration (in days)</label>
         <input
           type="number"
           name="duration"
           value={basicDetails.duration}
           onChange={handleBasicDetailsChange}
-          className="w-full p-2 border border-gray-300 rounded-md"
+          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
           placeholder="e.g., 7"
         />
       </div>
-
-      <div className="w-1/2">
-        <label>Rate</label>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Rate</label>
         <input
           type="number"
           name="rate"
           value={basicDetails.rate}
           onChange={handleBasicDetailsChange}
-          className="w-full p-2 border border-gray-300 rounded-md"
+          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
           placeholder="e.g., 1000"
         />
       </div>
-
-
-      
-      <div className="w-1/2">
-        <label>Main Photo</label>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Main Photo</label>
         <input
           type="file"
           onChange={handleMainPhotoChange}
-          className="w-full p-2 border border-gray-300 rounded-md"
+          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
         />
       </div>
     </div>
-
-
-
-
-      <div className='flex items-start justify-between'>
-      {/* include */}
-       <div>
-        <h2 className="text-md font-semibold">Selcted Includes:-</h2>
-        {error && <p className="text-red-500">Error: {error}</p>}
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-fit ">
+  
+    {/* Includes, Tags, and Categories */}
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+      <div>
+        <h2 className="text-md font-semibold text-gray-800 mb-3">Selected Includes</h2>
+        {error && <p className="text-red-500 mb-2">Error: {error}</p>}
+        <div className="grid grid-cols-1 gap-2">
           {packageInclude?.map((include, index) => (
             <div key={index} className="flex items-center">
               <input
@@ -532,99 +551,139 @@ const PackageSetup = () => {
             </div>
           ))}
         </div>
-
       </div>
+  
+   {/* Tag Name */}
+<div>
+  <h2 className="text-md font-semibold">Select Tag-</h2>
+  {error && <p className="text-red-500">Error: {error}</p>}
 
-      {/* tag Name */}
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full"> {/* Adjusted for two columns */}
+    {packageTag?.map((include, index) => (
+      <div key={index} className="flex items-center">
+        <input
+          type="checkbox"
+          id={`include-${index}`}
+          className="mr-2"
+          checked={tagData.includes(include.tagName)}
+          onChange={() => handleCheckboxTag(include.tagName)}
+        />
+        <label htmlFor={`include-${index}`} className="text-sm">
+          {include.tagName}
+        </label>
+      </div>
+    ))}
+  </div>
+</div>
+
+  
       <div>
-        <h2 className="text-md font-semibold">Select Tag-</h2>
-        {error && <p className="text-red-500">Error: {error}</p>}
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-fit ">
-          {packageTag?.map((include, index) => (
-            <div key={index} className="flex items-center">
+        <h2 className="text-md font-semibold text-gray-800 mb-3">Select Categories</h2>
+        <div className="grid grid-cols-1 gap-2">
+          {packageCategory?.map((category) => (
+            <div key={category._id} className="flex items-center">
               <input
                 type="checkbox"
-                id={`include-${index}`}
+                id={`category-${category._id}`}
                 className="mr-2"
-                checked={tagData.includes(include.tagName)}
-                onChange={() => handleCheckboxTag(include.tagName)}
+                value={category.categoryName}
+                checked={selectedCategories.includes(category.categoryName)}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setSelectedCategories([...selectedCategories, category.categoryName]);
+                  } else {
+                    setSelectedCategories(
+                      selectedCategories.filter((cat) => cat !== category.categoryName)
+                    );
+                  }
+                }}
               />
-              <label htmlFor={`include-${index}`} className="text-sm">
-                {include.tagName}
+              <label htmlFor={`category-${category._id}`} className="text-sm">
+                {category.categoryName}
               </label>
             </div>
           ))}
         </div>
-
       </div>
+    </div>
+  
+    {/* Rate Selection */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+    <div className="space-y-4">
+  <h2 className="text-md font-semibold">Select Package Rate By:</h2>
+  <div className="flex flex-col space-y-2">
+    {/* Input with Suggestions */}
+    <input
+      type="text"
+      list="rateSuggestions"
+      placeholder="e.g., per person, per day"
+      value={customValue}
+      onChange={handleCustomInputChange}
+      className="w-full p-2 border border-gray-300 rounded-md"
+    />
+    <datalist id="rateSuggestions">
+      <option value="per person" />
+      <option value="per day" />
+      <option value="per trip" />
+    </datalist>
+  </div>
 
-      {/* <div className="flex space-x-6"> */}
-      <div className="mb-4">
-  <h2 className="block text-sm font-normal text-black">Select Categories:</h2>
-  {packageCategory?.map((category) => (
-    <div key={category._id} className="flex items-center mb-2">
-      <input
-        type="checkbox"
-        id={`category-${category._id}`}
-        className="mr-2"
-        value={category.categoryName}
-        checked={selectedCategories.includes(category.categoryName)} // Check if category is selected
-        onChange={(e) => {
-          if (e.target.checked) {
-            // Add the selected category
-            setSelectedCategories([...selectedCategories, category.categoryName]);
-          } else {
-            // Remove the unselected category
-            setSelectedCategories(
-              selectedCategories.filter((cat) => cat !== category.categoryName)
-            );
-          }
-        }}
-      />
-      <label htmlFor={`category-${category._id}`} className="text-sm">
-        {category.categoryName}
+  <div className="mt-2">
+    <h3 className="text-sm font-semibold">Selected Rate:</h3>
+    <p className="text-gray-700">
+      {customValue || "None selected"}
+    </p>
+  </div>
+</div>
+
+<div className="space-y-4">
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        Select Destination Type
       </label>
-      
-      
+      <select
+        value={destinationType}
+        onChange={handleDestinationTypeChange}
+        className="w-full p-3 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring focus:ring-blue-300"
+      >
+        <option value="">Select an option</option>
+        <option value="home">Home</option>
+        <option value="topDestination">Top Destination</option>
+        <option value="both">Both</option>
+      </select>
+
+      <div className="mt-4">
+        <h3 className="text-sm font-semibold">Selected Destination Type:</h3>
+        <p className="text-gray-700">
+          {destinationType || "No destination type selected"}
+        </p>
+      </div>
+    </div>
 
 
     </div>
-   
-   
-
-  ))}
-        </div>
-
-
-      </div> 
-
-      {/* Navigation Buttons */}
-      <div className="flex justify-between mt-6">
-            <button
-              disabled={activeTab === 0}
-              onClick={() => setActiveTab(activeTab - 1)}
-              className={`px-6 py-2 rounded-md ${
-                activeTab === 0
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-blue-500 text-white hover:bg-blue-600'
-              }`}
-            >
-              Previous
-            </button>
-            <button
-              onClick={() => setActiveTab(activeTab + 1)}
-              className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-            >
-              Next
-            </button>
-          </div>
-
-      
-
-
-        </div>
-        //  </div>
+  
+    {/* Navigation Buttons */}
+    <div className="flex justify-between mt-6">
+      <button
+        disabled={activeTab === 0}
+        onClick={() => setActiveTab(activeTab - 1)}
+        className={`px-6 py-2 rounded-md ${
+          activeTab === 0
+            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            : 'bg-blue-500 text-white hover:bg-blue-600'
+        }`}
+      >
+        Previous
+      </button>
+      <button
+        onClick={() => setActiveTab(activeTab + 1)}
+        className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+  
           )}
 
 
@@ -809,8 +868,7 @@ const PackageSetup = () => {
           </div>
         )}
 
-
-{activeTab === 6 && (
+        {activeTab === 6 && (
   <div className="space-y-4 max-w-5xl mx-auto">
     {/* Add Day Wise Button */}
     <button
@@ -931,12 +989,67 @@ const PackageSetup = () => {
             </button>
     </div>
   </div>
-)}
+        )}
+
+        {activeTab===7 && (
+      <div className='px-10'>
+      <p>Routes</p>
+
+      {/* Input and button to add a new route */}
+      <div className="flex space-x-2 mb-4">
+        <input
+          type="text"
+          id="newRoute"
+          className="p-2 border rounded-md"
+          placeholder="Enter route"
+          maxLength={100}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              addRoute(e.target.value);
+              e.target.value = ''; // Clear input field after adding route
+            }
+          }}
+        />
+        <button
+          onClick={() => {
+            const newRoute = document.getElementById('newRoute').value;
+            addRoute(newRoute);
+            document.getElementById('newRoute').value = ''; // Clear input field
+          }}
+          disabled={routes.length >= 4}
+          className="bg-blue-500 text-white px-4 py-2 rounded-md disabled:bg-gray-400"
+        >
+          Add Route
+        </button>
+      </div>
+
+      {/* Displaying added routes */}
+      <div>
+        <h3 className="font-semibold text-lg">Added Routes:</h3>
+        <ul className="space-y-2">
+          {routes.map((route, index) => (
+            <li key={index} className="flex space-x-4 items-center text-md text-black">
+              <span>{route}</span>
+              <button
+                onClick={() => removeRoute(index)}
+                className="text-red-500 hover:text-red-700 border border-red-500 px-[0.2rem] py-[0.2rem]"
+              >
+                <RxCross1/>
+              </button>
+            </li>
+          ))}
+        </ul>
+        {routes.length >= 4 && (
+          <p className="text-red-500 mt-2">You can only add up to 4 routes.</p>
+        )}
+      </div>
+    </div>
+        )}
 
 
 
        {/* Submit Button in the Last Tab */}
-       {activeTab === 7 && (
+       {activeTab === 8 && (
             <div className="mt-6 flex justify-center">
               <button
                 className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-300"

@@ -10,6 +10,7 @@ const initialState = {
   specificSection: [],
   inquiryList: [],
   vendorList:[],
+  blogs:[],
   openModel: false,
 };
 
@@ -241,6 +242,23 @@ export const addVendor = createAsyncThunk(
     try {
 
       const response = await axiosInstance1.post(`/vendor`, vendorData);
+      console.log(response);
+
+      toast.success(response.data.message);
+      return response.data;
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to add Section");
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const getHighBlogs = createAsyncThunk(
+  "blogs/section",
+  async (_, { rejectWithValue }) => {
+    try {
+
+      const response = await axiosInstance1.get(`/dynamic/Blogs`);
       console.log(response);
 
       toast.success(response.data.message);

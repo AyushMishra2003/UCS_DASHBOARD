@@ -35,6 +35,8 @@ export const addPackage = createAsyncThunk('/add/package', async (formData, { re
         toast.success(res.data.message);
         return res.data;
     } catch (e) {
+        console.log(e);
+        
         toast.error(e?.response?.data?.message);
         return rejectWithValue(e?.response?.data);
     }
@@ -50,6 +52,8 @@ export const updatePackage = createAsyncThunk('/update/package', async ({formDat
         toast.success(res.data.message);
         return res.data;
     } catch (e) {
+        console.log(e);
+        
         toast.error(e?.response?.data?.message);
         return rejectWithValue(e?.response?.data);
     }
@@ -368,6 +372,21 @@ export const getPackageQuery = createAsyncThunk(
             return response.data.data;
         } catch (error) {
             toast.error(error?.response?.data?.message || 'Failed to get Tag');
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+
+export const addPackageStaus = createAsyncThunk(
+    'package/changeStatus',
+    async (id,{ rejectWithValue }) => {
+        try {
+           const response = await axiosInstance1.put(`/package/status/${id}`);
+            // toast.success(response.data.message);
+            return response.data.data;
+        } catch (error) {
+            toast.error(error?.response?.data?.message || 'Failed to add Tag');
             return rejectWithValue(error.response.data);
         }
     }
