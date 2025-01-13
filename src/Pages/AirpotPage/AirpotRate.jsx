@@ -28,9 +28,6 @@ const AirportRate = () => {
     const selectedCity = airpotRates.find(city => city._id === selectedCityId);
     const selectedCategory = categoryList.find(category => category._id === selectedCategoryId);
 
-   console.log(selectedCategory);
-   
-
     const updatedRate = {
       cityName: selectedCity?.cityName,
       categoryId: selectedCategory?._id,
@@ -255,9 +252,9 @@ const AirportRate = () => {
     <option value="" disabled>
       Select Kilometer
     </option>
-    <option value="30">30</option>
+    <option value="40">40</option>
     <option value="45">45</option>
-    <option value="50">50</option>
+    <option value="55">55</option>
     <option value="70">70</option>
   </select>
 

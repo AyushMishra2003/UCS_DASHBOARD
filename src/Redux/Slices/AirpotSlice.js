@@ -16,10 +16,12 @@ export const fetchAirpotRates = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         try {
             const response = await axiosInstance1.get('/airpot/rate/alllist');
-            console.log(response);
+    
             
             return response.data;
         } catch (error) {
+            console.log(error);
+            
             toast.error(error?.response?.data?.message || 'Failed to fetch rates');
             return rejectWithValue(error.response.data);
         }
