@@ -64,6 +64,10 @@ const AirportRate = () => {
   };
 
   const handleDeleteRate = async (rate) => {
+    const isConfirm=window.confirm("Are you sure you want to delete ")
+    if(isConfirm){
+
+
     const selectedCity = airpotRates.find(city => city._id === selectedCityId);
     const selectedCategory = categoryList.find(category => category._id === selectedCategoryId);
 
@@ -77,6 +81,7 @@ const AirportRate = () => {
     if (response?.payload) {
       dispatch(fetchAirpotRates());
     }
+  }
   };
 
   const handleAddRate = async () => {

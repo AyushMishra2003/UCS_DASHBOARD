@@ -15,6 +15,8 @@ const TextEditor = ({ onClose, initialData, saveData, page, child }) => { // Set
   const quillRef = useRef(); // Create a reference for ReactQuill
   const dispatch = useDispatch(); // Initialize dispatch from Redux
 
+  const [spinLoading,setSpinLoading]=useState(false)
+
   const modules = {
     toolbar: [
       [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
@@ -54,6 +56,8 @@ const TextEditor = ({ onClose, initialData, saveData, page, child }) => { // Set
 
     let response;
 
+    setSpinLoading(true)
+
     if (child) {
       const update = "ayush";
       let isTrue = Object.keys(initialData).length !== 0;
@@ -74,6 +78,8 @@ const TextEditor = ({ onClose, initialData, saveData, page, child }) => { // Set
         response = await dispatch(addSections({ data }));
       }
     }
+
+    setSpinLoading(false)
 
     if (response?.payload) {
       onClose();
@@ -144,12 +150,20 @@ const TextEditor = ({ onClose, initialData, saveData, page, child }) => { // Set
         />
 
         <div className="flex justify-between gap-4 mt-6"> {/* Added gap between buttons */}
-          <button
-            onClick={handleSave} // Call the handleSave function on click
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Save
-          </button>
+        <button
+        onClick={handleSave}
+        className="bg-blue-500 text-white px-4 py-2 rounded flex items-center justify-center"
+        disabled={spinLoading} // Disable the button while loading
+      >
+        {spinLoading ? (
+          <div className="flex items-center">
+            <div className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin mr-2"></div>
+            Saving...
+          </div>
+        ) : (
+          "Save"
+        )}
+      </button>
           <button
             onClick={onClose} // Use the prop to close modal
             className="bg-gray-300 text-black px-4 py-2 rounded"
