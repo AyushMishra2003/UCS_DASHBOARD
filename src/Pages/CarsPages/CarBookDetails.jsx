@@ -193,7 +193,7 @@ const CarBookDetails = () => {
     const isBookingConfirmed = bookDetail.status === 'confirmed';
     const isBookingComplete = bookDetail.status === "complete";
 
-    console.log(bookDetail);
+
 
 
     
@@ -272,9 +272,9 @@ const CarBookDetails = () => {
                 <p><strong>Total Price:</strong> ₹{bookDetail?.totalPrice}</p>
                 <p><strong>Extra KM:</strong> {bookDetail?.extraKm}</p>
                 <p><strong>Extra Price:</strong> ₹{bookDetail?.extraPrice}</p>
-                <p><strong>User Email:</strong> {bookDetail?.userId.email}</p>
-                <p><strong>User Phone Number:</strong> {bookDetail?.userId.phoneNumber}</p>
-                <p><strong>Customer Name:</strong> {bookDetail?.userId.name}</p>
+                <p><strong>User Email:</strong> {bookDetail?.userId?.email}</p>
+                <p><strong>User Phone Number:</strong> {bookDetail?.userId?.phoneNumber}</p>
+                <p><strong>Customer Name:</strong> {bookDetail?.userId?.name}</p>
             </div>
              {/* Extra Rates Input */}
              {!isBookingCancelled && (
