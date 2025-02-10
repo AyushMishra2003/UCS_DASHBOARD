@@ -20,9 +20,7 @@ const CityRateList = () => {
     const [newLocation, setNewLocation] = useState({ fromCity: '', toCity: '' });
     const [active,setActive]=useState(false)
     
-    const fetchCityRates=async()=>{
-        console.log("i am calling");
-        
+    const fetchCityRates=async()=>{  
        const response= await dispatch(fetchRates()); 
        console.log("city rates is",response);    
     }
