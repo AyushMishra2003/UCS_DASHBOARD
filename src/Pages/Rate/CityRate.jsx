@@ -102,9 +102,7 @@ const CityRateList = () => {
          
     //     }catch(error)
     // }
-   
-    console.log(rates);
-    console.log(categoryList);
+
     
 
 

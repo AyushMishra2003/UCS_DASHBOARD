@@ -62,7 +62,7 @@ const WebsiteMoreDetails = () => {
       };
         
       const handleAddNew = (section) => {
-        console.log("handle add new ");
+     
         setPreData({
           title: section.title,
           content: section.description, // Assuming description is the content you want to edit
@@ -115,9 +115,7 @@ const WebsiteMoreDetails = () => {
         ));
       };
 
-      console.log(section);
       
-
   return (
     <HomeLayout>
        {/* <div>WebsiteMoreDetails</div> */}

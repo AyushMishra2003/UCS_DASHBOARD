@@ -1,17 +1,12 @@
-import { Description } from '@mui/icons-material';
 import React, { useState } from 'react';
-import { Editor } from 'react-draft-wysiwyg';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import { EditorState, convertToRaw, ContentState, Modifier } from 'draft-js';
-import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
+import SunEditor from "suneditor-react";
+import "suneditor/dist/css/suneditor.min.css";
 import { useDispatch } from 'react-redux';
 import { addChild, addSections } from '../../Redux/Slices/dynamicSlice';
+import draftToHtml from 'draftjs-to-html';
 
 const TextEditor = ({ onClose, initialData, page, child }) => {
-  const contentBlock = htmlToDraft(initialData.content || '');
-  const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
-  const [editorState, setEditorState] = useState(EditorState.createWithContent(contentState));
+  const [editorContent, setEditorContent] = useState(initialData.content || "");
   const [title, setTitle] = useState(initialData.title || '');
   const oldTitle = initialData?.title;
   const [category, setCategory] = useState(initialData.category || 'Azolla Benefits');
@@ -20,55 +15,18 @@ const TextEditor = ({ onClose, initialData, page, child }) => {
   const dispatch = useDispatch();
   const [spinLoading, setSpinLoading] = useState(false);
 
-  const handleEditorChange = (state) => {
-    setEditorState(state);
-  };
-
-  // Function to insert a basic 3x3 table
-  const insertTable = () => {
-    const currentContent = editorState.getCurrentContent();
-    const selection = editorState.getSelection();
-    
-    const tableHTML = `
-      <table border="1" style="width:100%; border-collapse: collapse;">
-        <tr>
-          <td>Row 1, Col 1</td>
-          <td>Row 1, Col 2</td>
-          <td>Row 1, Col 3</td>
-        </tr>
-        <tr>
-          <td>Row 2, Col 1</td>
-          <td>Row 2, Col 2</td>
-          <td>Row 2, Col 3</td>
-        </tr>
-        <tr>
-          <td>Row 3, Col 1</td>
-          <td>Row 3, Col 2</td>
-          <td>Row 3, Col 3</td>
-        </tr>
-      </table>
-    `;
-
-    const newContentState = Modifier.insertText(
-      currentContent,
-      selection,
-      tableHTML
-    );
-
-    const newEditorState = EditorState.push(editorState, newContentState, 'insert-characters');
-    setEditorState(newEditorState);
-  };
-
   const handleSave = async () => {
-    const contentHtml = draftToHtml(convertToRaw(editorState.getCurrentContent()));
     let data = {
       title,
       category,
       page,
-      description: contentHtml,
+      description: editorContent,
       customField1,
       photo: attachment,
     };
+
+
+
 
     let response;
     setSpinLoading(true);
@@ -85,15 +43,23 @@ const TextEditor = ({ onClose, initialData, page, child }) => {
         : await dispatch(addSections({ data }));
     }
 
+
     setSpinLoading(false);
     if (response?.payload) {
       onClose();
     }
   };
 
+
+  console.log(editorContent);
+
+
+
+
+
   return (
     <div className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-[60%] relative overflow-y-auto max-h-[85vh]">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-[60%] relative overflow-y-auto max-h-[90vh]">
         <button className="absolute top-3 right-3 text-gray-600 hover:text-black" onClick={onClose}>
           &#x2715;
         </button>
@@ -132,7 +98,7 @@ const TextEditor = ({ onClose, initialData, page, child }) => {
           />
         </div>
 
-        <div className="mb-4">
+        <div className="mb-4 border border-blue-500">
           <label className="block text-gray-700 mb-2">Attachment (JPG/PNG)</label>
           <input
             type="file"
@@ -142,27 +108,41 @@ const TextEditor = ({ onClose, initialData, page, child }) => {
           />
         </div>
 
-        <Editor
-          editorState={editorState}
-          onEditorStateChange={handleEditorChange}
-          wrapperClassName="border rounded"
-          editorClassName="p-2"
-          toolbarClassName="border-b"
-          toolbar={{
-            options: ['inline', 'blockType', 'fontSize', 'list', 'textAlign', 'colorPicker', 'link', 'embedded', 'emoji', 'image', 'remove', 'history'],
-            blockType: {
-              inDropdown: true,
-              options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Blockquote', 'Code'],
-            },
+
+        <SunEditor
+          setContents={editorContent}
+          onChange={(content) => {
+            console.log("onchange maui", content);
+
+            // SunEditor से content को raw format में लें और सीधे save करें
+            setEditorContent(content);
+          }}
+          className="border border-red-500 min-h-[40rem]"
+          setOptions={{
+            height: "400px", // ✅ Editor ki height badha di
+            minHeight: "300px", // ✅ Minimum height set kar di
+            buttonList: [
+              ["undo", "redo"], // Undo/Redo
+              ["bold", "underline", "italic", "strike"], // Text Formatting
+              ["font", "fontSize", "formatBlock"], // ✅ Font Customization
+              ["fontColor", "hiliteColor"], // ✅ Text Color & Background Color
+              ["align", "list", "lineHeight"], // Text Alignment & Spacing
+              ["table"], // ✅ Insert & Edit Table
+              ["link"], // ✅ Hyperlink Support (Internal & External Links)
+              ["image", "video"], // ✅ Media Support
+              ["codeView"], // View HTML Code
+            ],
+            linkProtocol: "", // ✅ Disable default "http://"
+            // attributesWhitelist: {
+            //   a: "href target title class download", // ✅ Allow custom attributes
+            // },
+            addTagsWhitelist: "a[href]", // Allow href attribute explicitly
+            sanitize: false, // Disable automatic sanitization
+            defaultTag: "div",
           }}
         />
 
-        <button
-          onClick={insertTable}
-          className="bg-green-500 text-white px-4 py-2 rounded mt-4"
-        >
-          Insert Table
-        </button>
+
 
         <div className="flex justify-between gap-4 mt-6">
           <button
@@ -186,6 +166,8 @@ const TextEditor = ({ onClose, initialData, page, child }) => {
             Cancel
           </button>
         </div>
+
+
       </div>
     </div>
   );

@@ -73,7 +73,7 @@ const WebsiteContent = () => {
     
 
     const fetchData=async()=>{
-    console.log("hua");
+
     
        const response=await dispatch(getAllPages())
        console.log(response);
