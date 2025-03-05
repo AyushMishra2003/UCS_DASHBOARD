@@ -4,10 +4,11 @@ import axiosInstance1 from "../../Helper/axiosInstace1";
 
 // Initial state
 const initialState = {
-    isLoggedIn: localStorage.getItem('isLoggedIn') === 'true' || false,
-    role: localStorage.getItem('role') || "",
+    isLoggedIn: false,
+    role: [],
     data: localStorage.getItem('data') !== "undefined" ? JSON.parse(localStorage.getItem('data')) : {},
     isLoading: false,
+
     error: null,
 };
 
@@ -27,7 +28,7 @@ export const loginAccount = createAsyncThunk('/admin/login', async (data, { reje
     try {
         console.log(data);
         
-        const response = await axiosInstance1.post('/admin/login', data);
+        const response = await axiosInstance1.post('/operator/login', data);
         toast.success(response.data.message);
         return response.data;
     } catch (e) {
@@ -56,6 +57,25 @@ export const userProfile = createAsyncThunk('/admin/details', async (_, { reject
         return rejectWithValue(e?.message || "Failed to fetch user profile");
     }
 });
+
+
+export const validUser = createAsyncThunk('/admin/isValid', async (_, { rejectWithValue }) => {
+    try {
+
+        console.log("mai aaya hu ");
+        
+       
+        const response = await axiosInstance1.get('/operator/valid/user', { withCredentials: true });
+
+        toast.success(response.data.message);
+        return response.data;
+    } catch (e) {
+        toast.error(e?.response?.data?.message || "Failed to login");
+        return rejectWithValue(e?.response?.data?.message || "Failed to login");
+    }
+});
+
+
 
 // Create slice
 const authSlice = createSlice({
@@ -89,11 +109,7 @@ const authSlice = createSlice({
             .addCase(loginAccount.fulfilled, (state, action) => {
                 console.log(action);
                 
-                localStorage.setItem('data', JSON.stringify(action.payload.data));
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('role', action.payload.data.role);
-                state.data = action.payload.data;
-                state.role = action.payload.data.role;
+    
                 state.isLoading = false;
                 state.isLoggedIn = true;
             })
@@ -120,7 +136,29 @@ const authSlice = createSlice({
                 localStorage.setItem('role', action.payload.admin.role);
                 state.data = action.payload.admin;
                 state.role = action.payload.admin.role;
-            });
+            })
+
+            .addCase(validUser.pending, (state, action) => {
+                state.isLoading=true
+            })
+
+            .addCase(validUser.fulfilled, (state, action) => {
+                console.log(action);
+                
+                state.isLoggedIn=true
+                state.isLoading=false
+                state.role=action?.payload?.data?.role
+            })
+
+            .addCase(validUser.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload;
+                state.isLoggedIn=false
+            })
+           
+            
+             
+
     },
 });
 

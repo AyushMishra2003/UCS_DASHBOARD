@@ -41,7 +41,7 @@ const TermCondition = () => {
 
   // Handler for "View" action
   const handleView = (item) => {  
-    navigate('/edit/term/condition', { state: { item,selectedTripType}});
+    navigate('/term-condition/edit', { state: { item,selectedTripType}});
      
   };
 
@@ -67,7 +67,7 @@ const TermCondition = () => {
       <div className="container mx-auto p-4">
         <div className='flex items-center justify-center gap-4 pb-6'>
           <h2 className="text-2xl font-semibold text-center">Terms and Conditions</h2>
-          <Link to={"/add/term/condition"}>
+          <Link to={"/term-condition/add"}>
             <button className='w-6 h-6 text-white rounded-full bg-blue-500'>+</button>
           </Link>
         </div>

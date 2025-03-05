@@ -6,7 +6,8 @@ import axiosInstance1 from "../../Helper/axiosInstace1";
 const initialState = {
     loading: false,
     error: null,
-    operators: []
+    operators: [],
+    role:[]
 };
 
 // Async thunk for changing status
@@ -25,9 +26,9 @@ const initialState = {
 
 
 
-export const changeStatus = createAsyncThunk('/admin/status', async (data, { rejectWithValue }) => {
+export const changeStatus = createAsyncThunk('/operator/status', async (id, { rejectWithValue }) => {
     try {
-        const res = await axiosInstance1.post('/admin/status', data);
+        const res = await axiosInstance1.get(`operator/status/${id}`);
         toast.success(res.data.message);
         return res.data;
     } catch (e) {
@@ -37,9 +38,20 @@ export const changeStatus = createAsyncThunk('/admin/status', async (data, { rej
 });
 
 
-export const addOperator = createAsyncThunk('/admin/add', async (data, { rejectWithValue }) => {
+export const addOperator = createAsyncThunk('/operator/add', async (data, { rejectWithValue }) => {
     try {
-        const res = await axiosInstance1.post('/admin/add', data);
+        const res = await axiosInstance1.post('/operator', data);
+        toast.success(res.data.message);
+        return res.data;
+    } catch (e) {
+        toast.error(e?.response?.data?.message);
+        return rejectWithValue(e?.response?.data);
+    }
+});
+
+export const editOperator = createAsyncThunk('/operator/edit', async ({data,id}, { rejectWithValue }) => {
+    try {
+        const res = await axiosInstance1.put(`/operator/${id}`, data);
         toast.success(res.data.message);
         return res.data;
     } catch (e) {
@@ -51,13 +63,69 @@ export const addOperator = createAsyncThunk('/admin/add', async (data, { rejectW
 // Async thunk for getting all operators
 export const getOperators = createAsyncThunk('/admin/operators', async (_, { rejectWithValue }) => {
     try {
-        const res = await axiosInstance1.get('/admin/operator');
+        const res = await axiosInstance1.get('/operator');
         return res.data;
     } catch (e) {
         toast.error(e?.response?.data?.message);
         return rejectWithValue(e?.response?.data);
     }
 });
+
+export const deleteOperators = createAsyncThunk('/operator/delete', async (id, { rejectWithValue }) => {
+    try {
+        const res = await axiosInstance1.delete(`/operator/${id}`);
+        return res.data;
+    } catch (e) {
+        toast.error(e?.response?.data?.message);
+        return rejectWithValue(e?.response?.data);
+    }
+});
+
+
+export const getOperatorRole = createAsyncThunk('/operator/role/get', async (_, { rejectWithValue }) => {
+    try {
+        const res = await axiosInstance1.get('/role');
+        return res.data;
+    } catch (e) {
+        toast.error(e?.response?.data?.message);
+        return rejectWithValue(e?.response?.data);
+    }
+});
+
+export const addOperatorRole = createAsyncThunk('/operator/role/add', async (data, { rejectWithValue }) => {
+    try {
+        const res = await axiosInstance1.post('/role',data);
+        return res.data;
+    } catch (e) {
+        toast.error(e?.response?.data?.message);
+        return rejectWithValue(e?.response?.data);
+    }
+});
+
+export const  editOperatorRole = createAsyncThunk('/operator/role/edit', async ({data,editRoleId}, { rejectWithValue }) => {
+    try {
+       
+        const res = await axiosInstance1.put(`/role/${editRoleId}`,data);
+        return res.data;
+    } catch (e) {
+        toast.error(e?.response?.data?.message);
+        return rejectWithValue(e?.response?.data);
+    }
+});
+
+export const  deleteOperatorRole = createAsyncThunk('/operator/role/delete', async (id, { rejectWithValue }) => {
+    try {
+       
+        const res = await axiosInstance1.delete(`/role/${id}`);
+        return res.data;
+    } catch (e) {
+        toast.error(e?.response?.data?.message);
+        return rejectWithValue(e?.response?.data);
+    }
+});
+
+
+
 
 const operatorSlice = createSlice({
     name: "operator",
@@ -92,7 +160,24 @@ const operatorSlice = createSlice({
             .addCase(getOperators.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload || 'Failed to fetch operators';
-            });
+            })
+
+            .addCase(getOperatorRole.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+
+            .addCase(getOperatorRole.fulfilled, (state, action) => {
+                state.loading = false;
+                state.role = action?.payload?.data; // Populate the operators array with fetched data
+            })
+
+            .addCase(getOperatorRole.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload || 'Failed to fetch operator Role';
+            })
+
+
     }
 });
 

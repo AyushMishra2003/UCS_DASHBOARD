@@ -8,7 +8,8 @@ import { FaEye } from 'react-icons/fa';
 import { GrFormNext, GrFormPrevious } from 'react-icons/gr';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { getOperators, changeStatus } from '../../Redux/Slices/OperaotSlice';
+import { getOperators, changeStatus, deleteOperators } from '../../Redux/Slices/OperaotSlice';
+import { data } from 'autoprefixer';
 
 const OperatorList = () => {
     const dispatch = useDispatch();
@@ -21,20 +22,14 @@ const OperatorList = () => {
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
 
+    const fetchOperators=async()=>{
+          const response=await dispatch(getOperators())
+    }
+
     // Fetch data when component mounts or dependencies change
     useEffect(() => {
-        const loadData = async () => {
-            try {
-                const params = { page: currentPage, limit: itemsPerPage };
-                const response = await dispatch(getOperators(params)).unwrap();
-                setTotalPages(response.totalPages);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        loadData();
-    }, [currentPage, itemsPerPage, dispatch]);
+           fetchOperators()
+    }, [dispatch]);
 
     // Debounced search handler
     const handleSearch = useCallback(
@@ -52,16 +47,17 @@ const OperatorList = () => {
     };
 
     // Handle status change
-    const handleStatusChange = async (id, currentStatus, email) => {
-        const newStatus = !currentStatus; // Toggle status
-        console.log(email);
-        
+    const handleStatusChange = async (id) => {
+
         try {
-            await dispatch(changeStatus({email })).unwrap();
-            toast.success('Status updated!');
-            // You might want to reload the data after changing the status
-            dispatch(getOperators({ page: currentPage, limit: itemsPerPage }));
-            sendStatusChangeEmail(email, newStatus); // Replace with your actual email sending function
+            const res=await dispatch(changeStatus(id))
+            if(res?.payload?.success){
+                toast.success('Status updated!');
+                // You might want to reload the data after changing the status
+                dispatch(getOperators());
+                // sendStatusChangeEmail(email, newStatus); // Replace with your actual email sending function
+            }
+          
         } catch (error) {
             toast.error('Failed to update status');
         }
@@ -82,8 +78,32 @@ const OperatorList = () => {
     });
 
     if (loading) {
-        return <p>Loading...</p>;
+        return(
+            <HomeLayout>
+                <p>Loading...</p>
+            </HomeLayout>
+        )
     }
+
+    const handleDelete=async(id)=>{
+         const response=await dispatch(deleteOperators(id))
+         console.log(response);
+         if(response?.payload?.success){
+                  fetchOperators()
+         }
+         
+    }
+
+    const handleEdit=async(data)=>{
+        
+        navigate("/operator/add",{state:data})   
+    }
+
+
+  
+    
+ 
+    
 
     return (
         <HomeLayout>
@@ -128,6 +148,7 @@ const OperatorList = () => {
                         <tr>
                             <th className='border-b-2 border-gray-300 p-2 text-left'>Name</th>
                             <th className='border-b-2 border-gray-300 p-2 text-left'>Email</th>
+                            <th className='border-b-2 border-gray-300 p-2 text-left'>Password</th>
                             <th className='border-b-2 border-gray-300 p-2 text-left'>Status</th>
                             <th className='border-b-2 border-gray-300 p-2 text-left'>Actions</th>
                         </tr>
@@ -138,22 +159,40 @@ const OperatorList = () => {
                                 <tr key={data?.id}>
                                     <td className='border-b border-gray-300 p-2'>{data?.name}</td>
                                     <td className='border-b border-gray-300 p-2'>{data?.email}</td>
+                                    <td className='border-b border-gray-300 p-2'>{data?.password}</td>
                                     <td className='border-b border-gray-300 p-2'>
                                         <span
-                                            className={`inline-block w-3 h-3 rounded-full ${
-                                                data?.status ? 'bg-green-500' : 'bg-red-500'
-                                            }`}
+                                            className={`inline-block w-3 h-3 rounded-full ${data?.status==="active" ? 'bg-green-500' : 'bg-red-500'
+                                                }`}
                                         ></span>
-                                        {data?.status ? 'Active' : 'Inactive'}
+                                        {data?.status==="active" ? 'Active' : 'Inactive'}
                                     </td>
-                                    <td className='border-b border-gray-300 p-2'>
+                                    <td className="border-b border-gray-300 p-2 flex space-x-4">
+                                        {/* Activate/Deactivate Button */}
                                         <button
-                                            onClick={() => handleStatusChange(data?.id, data?.status, data?.email)}
-                                            className='text-blue-500 hover:underline'
+                                            onClick={() => handleStatusChange(data?._id)}
+                                            className="text-blue-500 hover:underline"
                                         >
                                             {data?.status ? 'Deactivate' : 'Activate'}
                                         </button>
+
+                                        {/* Edit Button */}
+                                        <button
+                                            onClick={() => handleEdit(data)}
+                                            className="text-green-500 hover:underline"
+                                        >
+                                            Edit
+                                        </button>
+
+                                        {/* Delete Button */}
+                                        <button
+                                            onClick={() => handleDelete(data?._id)}
+                                            className="text-red-500 hover:underline"
+                                        >
+                                            Delete
+                                        </button>
                                     </td>
+
                                 </tr>
                             ))
                         ) : (

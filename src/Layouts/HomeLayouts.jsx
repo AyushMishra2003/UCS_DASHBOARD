@@ -21,10 +21,10 @@ import { CiViewList } from "react-icons/ci";
 const HomeLayout = ({ children }) => {
     const [active, setActive] = useState(false);
     const [dropdownActive, setDropdownActive] = useState(false);
-    const [dropdownActive1,setDropdownActive1]=useState(false)
-    const [dropdownActive2,setDropdownActive2]=useState(false)
-    const [dropdownActive3,setDropdownActive3]=useState(false)
-    const [dropdownActive4,setDropdownActive4]=useState(false)
+    const [dropdownActive1, setDropdownActive1] = useState(false)
+    const [dropdownActive2, setDropdownActive2] = useState(false)
+    const [dropdownActive3, setDropdownActive3] = useState(false)
+    const [dropdownActive4, setDropdownActive4] = useState(false)
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -33,10 +33,13 @@ const HomeLayout = ({ children }) => {
     const avatar = useSelector((state) => state?.auth?.data?.avatar);
     const fullName = useSelector((state) => state?.auth?.data?.fullName);
 
+    const { role } = useSelector((state) => state.auth1)
+
+
     const handleLogout = async () => {
         const response = await dispatch(logout());
         console.log(response);
-        
+
 
         if (response?.payload?.success) {
             navigate('/login');
@@ -91,312 +94,259 @@ const HomeLayout = ({ children }) => {
                                 <HiOutlineXMark className='text-[1.5rem]' />
                             </div>
                         </li>
-                        <div className='h-[82vh] overflow-y-scroll scrollbar scrollbar-none'>
-                            <li className='mt-4'>
-                                <NavLink to={'/'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <MdOutlineDashboard />
-                                    Dashboard
-                                </NavLink>
-                            </li>
-                            {/* <li>
-                                <NavLink to={'/global-settings'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <MdOutlineSettings />
-                                    Global settings
-                                </NavLink>
-                            </li> */}
-                            <li>
-                                <NavLink to={'/website-content'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <MdContentPaste />
-                                    Website content
-                                </NavLink>
-                            </li>
-                            {/* <li>
-                                <NavLink to={'/gallery'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <RiGalleryFill />
-                                    Gallery
-                                </NavLink>
-                            </li> */}
-                            <li className='relative'>
-                                <div onClick={() => setDropdownActive(!dropdownActive)} className={`${listStyle} cursor-pointer flex items-center justify-between`}>
-                                    <div className='flex items-center justify-start gap-2'>
-                                        <LuShoppingBag />    <span>Cab Booking</span>
-                                    </div>
-                                    {dropdownActive ? <RiArrowDownSLine className='text-[1.5rem] font-bold' /> : <RiArrowRightSLine className='text-[1.5rem] font-bold' />}
-                                </div>
-                                {dropdownActive && (
-                                    <ul className='mt-2 ml-4'>
-                                        <li>
-                                            <NavLink to={'/car-booking'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                                <FaCar />
-                                                 Booking List
-                                            </NavLink>
-                                        </li>
-                                        <li>
-                                <NavLink to={'/booking'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaCar />
-                                     Booking
-                                </NavLink>
-                            </li>
-                                      
-                                    </ul>
-                                )}
-                            </li>
+                        {/* {role && role.lenght > 0 && */}
+                            <div className='h-[82vh] overflow-y-scroll scrollbar scrollbar-none'>
+                                {role.some(item => item.title === "dashboard") &&
+                                    <li className='mt-4'>
+                                        <NavLink to={'/'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                            <MdOutlineDashboard />
+                                            Dashboard
+                                        </NavLink>
+                                    </li>
+                                }
 
-                            <li className='relative'>
-                                <div onClick={() => setDropdownActive1(!dropdownActive1)} className={`${listStyle} cursor-pointer flex items-center justify-between`}>
-                                    <div className='flex items-center justify-start gap-2'>
-                                        <LuShoppingBag />    <span>Rate Chart</span>
-                                    </div>
-                                    {dropdownActive1 ? <RiArrowDownSLine className='text-[1.5rem] font-bold' /> : <RiArrowRightSLine className='text-[1.5rem] font-bold' />}
-                                </div>
-                                {dropdownActive1 && (
-                                    <ul className='mt-2 ml-4'>
-                                        <li>
-                                <NavLink to={'/chart'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <GiSunPriest />
-                                     One Way
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to={'/localRateChart'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaSailboat />
-                                     Local
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to={'/round'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaSailboat />
-                                     Round
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to={'/airpotRate'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaSailboat />
-                                     Airpot
-                                </NavLink>
-                            </li>
-                                       
-                                    </ul>
-                                )}
-                            </li>
-                            
-                            <li className='relative'>
-                                <div onClick={() => setDropdownActive2(!dropdownActive2)} className={`${listStyle} cursor-pointer flex items-center justify-between`}>
-                                    <div className='flex items-center justify-start gap-2'>
-                                        <LuShoppingBag />    <span>Operator</span>
-                                    </div>
-                                    {dropdownActive2 ? <RiArrowDownSLine className='text-[1.5rem] font-bold' /> : <RiArrowRightSLine className='text-[1.5rem] font-bold' />}
-                                </div>
-                                {dropdownActive2 && (
-                                    <ul className='mt-2 ml-4'>
-                                         <li>
-                                <NavLink to={'/operator'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaCar />
-                                     View Operator
-                                </NavLink>
-                            </li> 
-                            <li>
-                                <NavLink to={'/add'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaCar />
-                                    Add Operator
-                                </NavLink>
-                            </li>
-                                       
-                                    </ul>
-                                )}
-                            </li>
+                                {role.some(item => item.title === "website content") &&
+                                    <li>
+                                        <NavLink to={'/website-content'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                            <MdContentPaste />
+                                            Website content
+                                        </NavLink>
+                                    </li>
+                                }
 
-                            <li className='relative'>
-                                <div onClick={() => setDropdownActive3(!dropdownActive3)} className={`${listStyle} cursor-pointer flex items-center justify-between`}>
-                                    <div className='flex items-center justify-start gap-2'>
-                                        <LuShoppingBag />    <span>Cab List</span>
-                                    </div>
-                                    {dropdownActive2 ? <RiArrowDownSLine className='text-[1.5rem] font-bold' /> : <RiArrowRightSLine className='text-[1.5rem] font-bold' />}
-                                </div>
-                                {dropdownActive3 && (
-                                    <ul className='mt-2 ml-4'>
-                                         <li>
-                                <NavLink to={'/add/category'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaCar />
-                                      Add Cab List
-                                </NavLink>
-                            </li> 
-                            <li>
-                                <NavLink to={'/category/list'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaCar />
-                                      View Cab List
-                                </NavLink>
-                            </li>
-                                       
-                                    </ul>
-                                )}
-                            </li>
-                            
+                                {role.some(item => item.title === "cab booking") &&
+
+                                    <li className='relative'>
+                                        <div onClick={() => setDropdownActive(!dropdownActive)} className={`${listStyle} cursor-pointer flex items-center justify-between`}>
+                                            <div className='flex items-center justify-start gap-2'>
+                                                <LuShoppingBag />    <span>Cab Booking</span>
+                                            </div>
+                                            {dropdownActive ? <RiArrowDownSLine className='text-[1.5rem] font-bold' /> : <RiArrowRightSLine className='text-[1.5rem] font-bold' />}
+                                        </div>
+                                        {dropdownActive && (
+                                            <ul className='mt-2 ml-4'>
+                                                <li>
+                                                    <NavLink to={'/cab-booking/list'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                                        <FaCar />
+                                                        Booking List
+                                                    </NavLink>
+                                                </li>
+                                                <li>
+                                                    <NavLink to={'/cab-booking/book'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                                        <FaCar />
+                                                        Booking
+                                                    </NavLink>
+                                                </li>
+
+                                            </ul>
+                                        )}
+                                    </li>
+                                }
+
+                                {role.some(item => item.title === "rate chart") &&
+
+                                    <li className='relative'>
+                                        <div onClick={() => setDropdownActive1(!dropdownActive1)} className={`${listStyle} cursor-pointer flex items-center justify-between`}>
+                                            <div className='flex items-center justify-start gap-2'>
+                                                <LuShoppingBag />    <span>Rate Chart</span>
+                                            </div>
+                                            {dropdownActive1 ? <RiArrowDownSLine className='text-[1.5rem] font-bold' /> : <RiArrowRightSLine className='text-[1.5rem] font-bold' />}
+                                        </div>
+                                        {dropdownActive1 && (
+                                            <ul className='mt-2 ml-4'>
+                                                <li>
+                                                    <NavLink to={'/rate-chart/oneway'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                                        <GiSunPriest />
+                                                        One Way
+                                                    </NavLink>
+                                                </li>
+                                                <li>
+                                                    <NavLink to={'/rate-chart/local'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                                        <FaSailboat />
+                                                        Local
+                                                    </NavLink>
+                                                </li>
+                                                <li>
+                                                    <NavLink to={'/rate-chart/round'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                                        <FaSailboat />
+                                                        Round
+                                                    </NavLink>
+                                                </li>
+                                                <li>
+                                                    <NavLink to={'/rate-chart/airport'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                                        <FaSailboat />
+                                                        Airpot
+                                                    </NavLink>
+                                                </li>
+
+                                            </ul>
+                                        )}
+                                    </li>
+                                }
 
 
+                                {role.some(item => item.title === "operator") &&
+                                    <li className='relative'>
+                                        <div onClick={() => setDropdownActive2(!dropdownActive2)} className={`${listStyle} cursor-pointer flex items-center justify-between`}>
+                                            <div className='flex items-center justify-start gap-2'>
+                                                <LuShoppingBag />    <span>Operator</span>
+                                            </div>
+                                            {dropdownActive2 ? <RiArrowDownSLine className='text-[1.5rem] font-bold' /> : <RiArrowRightSLine className='text-[1.5rem] font-bold' />}
+                                        </div>
+                                        {dropdownActive2 && (
+                                            <ul className='mt-2 ml-4'>
+                                                <li>
+                                                    <NavLink to={'/operator'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                                        <FaCar />
+                                                        View Operator
+                                                    </NavLink>
+                                                </li>
+                                                <li>
+                                                    <NavLink to={'/operator/add'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                                        <FaCar />
+                                                        Add Operator
+                                                    </NavLink>
+                                                </li>
 
-                            {/* <li>
-                                <NavLink to={'/'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaCar />
-                                     Vendor List
-                                </NavLink>
-                            </li> */}
-                            {/* <li>
-                                <NavLink to={'/booking'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaCar />
-                                     Booking
-                                </NavLink>
-                            </li> */}
-                            {/* <li>
-                                <NavLink to={'/operator'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaCar />
-                                    Operator
-                                </NavLink>
-                            </li> */}
-                      
-                            <ul>
-                            {/* <li>
-                                <NavLink to={'/chart'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <GiSunPriest />
-                                   Trip Distance List
-                                </NavLink>
-                            </li> */}
-                            </ul>
-                           
-                            
-                            {/* <li>
-                                <NavLink to={'/hotels-list'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaHotel />
-                                    Hotels list
-                                </NavLink>
-                            </li> */}
-                            {/* <li>
-                                <NavLink to={'/guider-list'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <RiUserLocationFill />
-                                    Guider list
-                                </NavLink>
-                            </li> */}
-                            {/* <li>
-                                <NavLink to={'/users-list'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <PiUserList />
-                                    Operator list
-                                </NavLink>
-                            </li> */}
-                               {/* <li>
-                                <NavLink to={'/category/list'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaSailboat />
-                                     Cab List
-                                </NavLink>
-                            </li> */}
+                                                <li>
+                                                    <NavLink to={'/operator/role'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                                        <FaCar />
+                                                        Role Management
+                                                    </NavLink>
+                                                </li>
 
-<li className='relative'>
-                                <div onClick={() => setDropdownActive4(!dropdownActive4)} className={`${listStyle} cursor-pointer flex items-center justify-between`}>
-                                    <div className='flex items-center justify-start gap-2'>
-                                        <LuShoppingBag />    <span>Packages</span>
-                                    </div>
-                                    {dropdownActive4 ? <RiArrowDownSLine className='text-[1.5rem] font-bold' /> : <RiArrowRightSLine className='text-[1.5rem] font-bold' />}
-                                </div>
-                                {dropdownActive4 && (
-                                    <ul className='mt-2 ml-4'>
-                                         <li>
-                                <NavLink to={'/view/package'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaCar />
-                                     View Package
-                                </NavLink>
-                            </li> 
-                            <li>
-                                <NavLink to={'/add/package'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaCar />
-                                    Add Package
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to={'/package/query'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaCar />
-                                    View Query
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to={'/package/setup'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaCar />
-                                    Package Setup
-                                </NavLink>
-                            </li>
-                                       
-                                    </ul>
-                                )}
-                            </li>
-                            <li>
-                                <NavLink to={'/discount'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaSailboat />
-                                     Discount Manager
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to={'/customer'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <MdBoy/>
-                                     Customer Details
-                                </NavLink>
-                            </li>
-                            
-                          
-                            {/* <li>
-                                <NavLink to={'/category/list'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaSailboat />
-                                       CAR LIST
-                                </NavLink>
-                            </li> */}
-                            {/* <li>
-                                <NavLink to={'/localRateChart'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaSailboat />
-                                     Local Rate
-                                </NavLink>
-                            </li> */}
-                         
+                                            </ul>
+                                        )}
+                                    </li>
+                                }
+
+                                {role.some(item => item.title === "cab list") &&
+
+                                    <li className='relative'>
+                                        <div onClick={() => setDropdownActive3(!dropdownActive3)} className={`${listStyle} cursor-pointer flex items-center justify-between`}>
+                                            <div className='flex items-center justify-start gap-2'>
+                                                <LuShoppingBag />    <span>Cab List</span>
+                                            </div>
+                                            {dropdownActive2 ? <RiArrowDownSLine className='text-[1.5rem] font-bold' /> : <RiArrowRightSLine className='text-[1.5rem] font-bold' />}
+                                        </div>
+                                        {dropdownActive3 && (
+                                            <ul className='mt-2 ml-4'>
+                                                <li>
+                                                    <NavLink to={'/cab-list/add'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                                        <FaCar />
+                                                        Add Cab List
+                                                    </NavLink>
+                                                </li>
+                                                <li>
+                                                    <NavLink to={'/cab-list/list'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                                        <FaCar />
+                                                        View Cab List
+                                                    </NavLink>
+                                                </li>
+
+                                            </ul>
+                                        )}
+                                    </li>
+                                }
+
+                                {role.some(item => item.title === "packages") &&
+
+                                    <li className='relative'>
+                                        <div onClick={() => setDropdownActive4(!dropdownActive4)} className={`${listStyle} cursor-pointer flex items-center justify-between`}>
+                                            <div className='flex items-center justify-start gap-2'>
+                                                <LuShoppingBag />    <span>Packages</span>
+                                            </div>
+                                            {dropdownActive4 ? <RiArrowDownSLine className='text-[1.5rem] font-bold' /> : <RiArrowRightSLine className='text-[1.5rem] font-bold' />}
+                                        </div>
+                                        {dropdownActive4 && (
+                                            <ul className='mt-2 ml-4'>
+                                                <li>
+                                                    <NavLink to={'/packages/view'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                                        <FaCar />
+                                                        View Package
+                                                    </NavLink>
+                                                </li>
+                                                <li>
+                                                    <NavLink to={'/packages/add'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                                        <FaCar />
+                                                        Add Package
+                                                    </NavLink>
+                                                </li>
+                                                <li>
+                                                    <NavLink to={'/packages/query'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                                        <FaCar />
+                                                        View Query
+                                                    </NavLink>
+                                                </li>
+                                                <li>
+                                                    <NavLink to={'/packages/setup'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                                        <FaCar />
+                                                        Package Setup
+                                                    </NavLink>
+                                                </li>
+
+                                            </ul>
+                                        )}
+                                    </li>
+
+                                }
+
+                                {role.some(item => item.title === "discount manager") &&
+                                    <li>
+                                        <NavLink to={'/discount-manager'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                            <FaSailboat />
+                                            Discount Manager
+                                        </NavLink>
+                                    </li>
+                                }
+
+                                {role.some(item => item.title === "customer detail") &&
+                                    <li>
+                                        <NavLink to={'/customer-detail'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                            <MdBoy />
+                                            Customer Details
+                                        </NavLink>
+                                    </li>
+                                }
+
+                                {role.some(item => item.title === "vendor list") &&
+                                    <li>
+                                        <NavLink to={'/vendor-list'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                            <FaPersonCircleQuestion />
+                                            Vendor List
+                                        </NavLink>
+                                    </li>
+
+                                }
+
+
+                                {role.some(item => item.title === "inquiry list") &&
+                                    <li>
+                                        <NavLink to={'/inquiry-list'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                            <FaRegMessage />
+                                            Inquiry List
+                                        </NavLink>
+                                    </li>
+                                }
+
+                                {role.some(item => item.title === "term condition") &&
+
+                                    <li>
+                                        <NavLink to={'/term-condition'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
+                                            <CiViewList />
+                                            Term & Condition
+                                        </NavLink>
+                                    </li>
+
+                                }
+
+
+
+
+                            </div>
                         
-                            {/* <li>
-                                <NavLink to={'/localcategory'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaSailboat />
-                                     Local Category
-                                </NavLink>
-                            </li> */}
-                            {/* <li>
-                                <NavLink to={'/city/search'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaSailboat />
-                                     Local Search
-                                </NavLink>
-                            </li> */}
-                               <li>
-                                <NavLink to={'/vendor'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaPersonCircleQuestion />
-                                    Vendor List
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to={'/inquiry'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaRegMessage/>
-                                    Inquiry List
-                                </NavLink>
-                            </li>
-
-                            <li>
-                                <NavLink to={'/view/term/condition'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <CiViewList/>
-                                    Term & Condition
-                                </NavLink>
-                            </li>
-
-                            {/* <li>
-                                <NavLink to={'/add/term/condition'} className={({ isActive }) => isActive ? activeListStyle : listStyle}>
-                                    <FaRegMessage/>
-                                    Add Term & Condition
-                                </NavLink>
-                            </li> */}
-
-
-                        </div>
                     </ul>
-                    <Link  onClick={handleLogout} className='bg-[#FF4C51] transition-all duration-700 hover:bg-[#685ED4] border-none text-white flex items-center gap-2 pl-4 p-2 m-[0.4rem] ml-0 mr-3 rounded-r md:mr-4 font-semibold text-[1.02rem] tracking-wide'>
+                    <Link onClick={handleLogout} className='bg-[#FF4C51] transition-all duration-700 hover:bg-[#685ED4] border-none text-white flex items-center gap-2 pl-4 p-2 m-[0.4rem] ml-0 mr-3 rounded-r md:mr-4 font-semibold text-[1.02rem] tracking-wide'>
                         <CgLogOut className='text-[1.3rem] font-semibold' /> Logout
                     </Link>
                 </header>

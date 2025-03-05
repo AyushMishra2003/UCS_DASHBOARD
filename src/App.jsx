@@ -83,6 +83,7 @@ import ChangePackageSetup from './Pages/package/ChangePackageSetup'
 import DemoPackages from './Pages/package/Demo'
 import PackageQuery from './Pages/package/PackageQuery'
 import MyEditor from './Pages/Editor/MyEditor'
+import RoleManagement from './Pages/Role-Management/RoleManagement'
 
 const App = () => {
   return (
@@ -90,54 +91,43 @@ const App = () => {
       <Routes>
         <Route path='/login' element={<Login />} />
         <Route path='/denied' element={<DeniedPage />} />
-        <Route path='/*' element={<PageNotFound />} />
-        <Route element={<RequireAuth allowedRoles={['Admin','Operator']} />} >
-          <Route path='/' element={<Home />} />
-          <Route path='/profile/:fullName' element={<Profile />} />
-          <Route path='/global-settings' element={<GlobalSettingsPage />} />
-          <Route path='/operator' element={<OperatorList/>} />
-          <Route path='/add' element={<AddOperatorPage/>} />
-
+    
+ 
+     
+        <Route element={<RequireAuth/>} >
+        <Route path='/' element={<Home />} />
+    
+    
+          <Route path='/operator' element={<OperatorList />} />
+          <Route path='/operator/add' element={<AddOperatorPage />} />
+          <Route path='/operator/role' element={<RoleManagement/>} />
 
 
           <Route path='/website-content' element={<WebsiteContent />} />
-          <Route path='/website-content/details/:name' element={<WebsiteDetails/>} />
-          <Route path='/website-content/child' element={<WebsiteMoreDetails/>} />
-          <Route path='/discount' element={<DiscountManager/>} />
-          <Route path='/chart' element={<CityRateList/>} />
+          <Route path='/website-content/details/:name' element={<WebsiteDetails />} />
+          <Route path='/website-content/child' element={<WebsiteMoreDetails />} />
+          <Route path='/discount-manager' element={<DiscountManager />} />
+     
           <Route path='/website-content/about' element={<AboutContent />} />
           <Route path='/website-content/contact' element={<ContactContent />} />
           <Route path='/website-content/testimonial' element={<TestimonialWebsite />} />
-
-
-          
           <Route path='/car-list' element={<CarsList />} />
-         
-          <Route path='/boat/:id' element={<BoatDetail />} />
-          <Route path='/priest/:id' element={<PriestDetail />} />
-          <Route path='/guider/:id' element={<GuiderDetail />} />
-          <Route path='/hotel/:id' element={<HotelDetail />} />
-          <Route path='/book-detail/:id' element={<CarBookDetails />} />
-          <Route path='/boat-book-detail/:id' element={<BoatBookDetails />} />
-          <Route path='/priest-book-detail/:id' element={<PriestBookDetails />} />
-          <Route path='/guider-book-detail/:id' element={<GuiderBookDetails />} />
-          <Route path='/hotel-book-detail/:id' element={<HotelBookDetail />} />
-          
-          <Route path='/boat-booking' element={<BoatOrders />} />
-          <Route path='/priest-booking' element={<PriestOrders />} />
-          <Route path='/guider-booking' element={<GuiderOrders />} />
-          <Route path='/hotel-booking' element={<HotelOrders />} />
-          <Route path='/users-list' element={<UsersList />} />
-          <Route path='/boatman-list' element={<BoatList />} />
-          <Route path='/priest-list' element={<PriestList />} />
-          <Route path='/guider-list' element={<GuiderList />} />
-          <Route path='/hotels-list' element={<HotelsList />} />
-          
-          
+
+
+          {/* rate chart */}
+          <Route path='/rate-chart/oneway' element={<CityRateList />} />
+          <Route path='/rate-chart/local' element={<LocalChartRate />} />
+          <Route path='/rate-chart/round' element={<RoundCategory />} />
+          <Route path='/rate-chart/airport' element={<AirpotRate />} />
+
+
+     
+
+
           <Route path='/cars/oneway/:pickupName' element={<OnewayCarList />} />
           <Route path='/cars/:cityName' element={<CarList />} />
-          <Route path='/cars/from/:pickupName' element={<CarDropList/>} />
-          <Route path='/cars/round/:pickupName' element={<RoundCarList/>} />
+          <Route path='/cars/from/:pickupName' element={<CarDropList />} />
+          <Route path='/cars/round/:pickupName' element={<RoundCarList />} />
 
 
           <Route path='/book-cab' element={<BookCab />} />
@@ -148,64 +138,58 @@ const App = () => {
 
 
           {/* car Booking */}
-          <Route path='/car-booking' element={<CarOrders />} />
-          <Route path='/cancelbooking' element={<CancelBooking/>} />
-          <Route path='/completebooking' element={<CompleteBooking/>} />
-          <Route path='/request' element={<CarRequest/>} />
-          {/* <Route path='/request/approvedbooking/:id' element={<RequestCarBook/>} /> */}
-          <Route path='/request/approvedbooking/:id' element={<RequestCarBook/>} />
-          <Route path='/carBookings/:id' element={<CarBookDetails/>} />
-
-          <Route path='/booking' element={<MainForm/>} />
-          
-          <Route path='/text-editor' element={<TextEditor/>} />
+          <Route path='/cab-booking/list' element={<CarOrders />} />
+          <Route path='/cab-booking/book' element={<MainForm />} />
+          <Route path='/editor' element={<MyEditor />} />
+          <Route path='/text-editor' element={<TextEditor />} />
 
           {/* car list */}
-        
+
 
 
 
           {/* local Rate */}
-          <Route path='/localRateChart' element={<LocalChartRate/>} />
-          <Route path='/localcategory' element={<LocalCategory/>} />
-          <Route path='/city/search' element={<CitySearch/>} /> 
+    
+          <Route path='/localcategory' element={<LocalCategory />} />
+          <Route path='/city/search' element={<CitySearch />} />
 
-           {/*Airpot Rates  */}
-           <Route path='/airpotRate' element={<AirpotRate/>} />
-
-
-           <Route path='/add/category' element={<AddCategory/>} />
-           <Route path='/category/list' element={<CategoryList/>} />
-           <Route path='/round' element={<RoundCategory/>} />
-
-           <Route path='/customer' element={<Customer/>} />
-           <Route path='/edit/customer' element={<EditCustomer/>} />
-           <Route path='/customer/detail' element={<CustomerDetail/>} />
-           <Route path='/inquiry' element={<Inquiry/>} />
-             <Route path='/inquiry/detail' element={<InquiryDetail/>} />
-             <Route path='/vendor' element={<VendorList/>} />
-             <Route path='/vendor/details' element={<VendorDetails/>} />
-             <Route path='/vendor/add' element={<AddVendor/>} />
-           <Route path='/demo' element={<Demo/>} />
+          {/*Airpot Rates  */}
+       
 
 
-           <Route path='/view/term/condition' element={<TermCondition/>} />
-           <Route path='/add/term/condition' element={<AddTermCondition/>} />
-           <Route path='/edit/term/condition' element={<EditTermCondition/>} />
+          <Route path='/cab-list/add' element={<AddCategory />} />
+          <Route path='/cab-list/list' element={<CategoryList />} />
+        
 
-           
-           {/* Package */}
-           <Route path='/add/package' element={<PackageSetup/>} />
-           <Route path='/view/package' element={<ViewPackage/>} />
-           <Route path='/package/setup' element={<ChangePackageSetup/>} />
-           <Route path='/package/query' element={<PackageQuery/>} />
-           <Route path='/demo/package' element={<DemoPackages/>} />
+          <Route path='/customer-detail' element={<Customer />} />
+          <Route path='/edit/customer' element={<EditCustomer />} />
+          <Route path='/customer/detail' element={<CustomerDetail />} />
+          <Route path='/inquiry-list' element={<Inquiry />} />
+          <Route path='/inquiry/detail' element={<InquiryDetail />} />
+          <Route path='/vendor-list' element={<VendorList />} />
+          <Route path='/vendor/details' element={<VendorDetails />} />
+          <Route path='/vendor/add' element={<AddVendor />} />
+          <Route path='/demo' element={<Demo />} />
 
-           <Route path='/editor' element={<MyEditor/>} />
 
+          <Route path='/term-condition' element={<TermCondition />} />
+          <Route path='/term-condition/add' element={<AddTermCondition />} />
+          <Route path='/term-condition/edit' element={<EditTermCondition />} />
+
+
+          {/* Package */}
+          <Route path='/packages/add' element={<PackageSetup />} />
+          <Route path='/packages/view' element={<ViewPackage />} />
+          <Route path='/packages/setup' element={<ChangePackageSetup />} />
+          <Route path='/packages/query' element={<PackageQuery />} />
+          <Route path='/packages/demo' element={<DemoPackages />} />
+
+        
 
 
         </Route>
+
+        {/* <Route path='/*' element={<PageNotFound />} /> */}
 
 
 

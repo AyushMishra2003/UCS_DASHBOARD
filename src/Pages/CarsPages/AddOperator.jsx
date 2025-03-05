@@ -1,31 +1,87 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addOperator } from '../../Redux/Slices/OperaotSlice';
+import { addOperator, editOperator, getOperatorRole } from '../../Redux/Slices/OperaotSlice';
 import { toast } from 'sonner';
 import HomeLayout from '../../Layouts/HomeLayouts';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useLocation } from 'react-router-dom';
 
 const AddOperatorPage = () => {
+  
+    const location=useLocation()
+    const {state}=location
     const dispatch = useDispatch();
-    const { loading, error, success } = useSelector((state) => state.operator);
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [name, setName] = useState(state?.name || "");
+    const [email, setEmail] = useState(state?.email || "");
+    const [password, setPassword] = useState(state?.password || "");
     const [passwordVisible, setPasswordVisible] = useState(false);
+    const [selectedRoles, setSelectedRoles] = useState(state?.role?.map(role => role._id) || []);
 
-    const handleSubmit = (e) => {
+    const [selectAll, setSelectAll] = useState(false);
+    const { role, loading, error, success } = useSelector((state) => state.operator);
+
+
+   console.log(selectedRoles);
+
+   console.log(state);
+   
+   
+
+    
+
+    useEffect(() => {
+        dispatch(getOperatorRole());
+    }, [dispatch]);
+
+    useEffect(() => {
+        // If all roles are selected, set selectAll to true, otherwise false
+        setSelectAll(selectedRoles.length === role?.length);
+    }, [selectedRoles, role]);
+
+    const handleRoleSelection = (roleId) => {
+        setSelectedRoles((prevRoles) =>
+            prevRoles.includes(roleId)
+                ? prevRoles.filter((id) => id !== roleId)
+                : [...prevRoles, roleId]
+        );
+    };
+
+    const handleSelectAll = () => {
+        if (selectAll) {
+            setSelectedRoles([]); // Deselect all
+        } else {
+            setSelectedRoles(role.map((r) => r._id)); // Select all
+        }
+        setSelectAll(!selectAll);
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        dispatch(addOperator({ name, email, password }))
-            .unwrap()
-            .then(() => {
-                setName('');
-                setEmail('');
-                setPassword('');
-                toast.success('Operator added successfully!');
-            })
-            .catch(() => {
-                toast.error('Failed to add operator.');
-            });
+        const data = {
+            name: name,
+            email: email,
+            password: password,
+            role: selectedRoles
+        };
+
+
+        let response
+
+        if(state){
+           response= await dispatch(editOperator({data,id:state._id}));
+        }else{
+            response= await dispatch(addOperator(data));   
+        }
+
+     
+
+        if (response?.payload?.success) {
+            setName("");
+            setEmail("");
+            setPassword("");
+            setPasswordVisible(false);
+            setSelectedRoles([]);
+        }
     };
 
     const togglePasswordVisibility = () => {
@@ -34,10 +90,10 @@ const AddOperatorPage = () => {
 
     return (
         <HomeLayout>
-            <div className="max-w-lg mx-auto p-4 bg-white shadow-md rounded-md mt-8">
-                <h2 className="text-2xl font-semibold mb-4 text-center">Add New Operator</h2>
-                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                    <div className="flex flex-col">
+            <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6 mt-10">
+                <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Add New Operator</h2>
+                <form onSubmit={handleSubmit} className="space-y-5">
+                    <div>
                         <label htmlFor="name" className="text-lg font-medium text-gray-700">Name</label>
                         <input
                             type="text"
@@ -45,10 +101,10 @@ const AddOperatorPage = () => {
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             required
-                            className="p-2 border rounded-md"
+                            className="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
-                    <div className="flex flex-col">
+                    <div>
                         <label htmlFor="email" className="text-lg font-medium text-gray-700">Email</label>
                         <input
                             type="email"
@@ -56,10 +112,10 @@ const AddOperatorPage = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
-                            className="p-2 border rounded-md"
+                            className="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
-                    <div className="flex flex-col relative">
+                    <div className="relative">
                         <label htmlFor="password" className="text-lg font-medium text-gray-700">Password</label>
                         <input
                             type={passwordVisible ? 'text' : 'password'}
@@ -67,25 +123,64 @@ const AddOperatorPage = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
-                            className="p-2 border rounded-md pr-10"
+                            className="mt-1 p-3 w-full border border-gray-300 rounded-md pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                         <button
                             type="button"
                             onClick={togglePasswordVisibility}
-                            className="absolute inset-y-0 right-2 flex items-center"
+                            className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
                         >
                             {passwordVisible ? <FaEyeSlash /> : <FaEye />}
                         </button>
                     </div>
+
+                    <div>
+                        <label className="text-lg font-medium text-gray-700">Select Roles</label>
+                        <div className="mt-2 flex flex-wrap gap-4">
+                            {/* Select All Checkbox */}
+                            {role && role.length > 0 && (
+                                <label className="flex w-full items-center space-x-2 text-gray-800 font-semibold">
+                                    <input
+                                        type="checkbox"
+                                        checked={selectAll}
+                                        onChange={handleSelectAll}
+                                        className="form-checkbox h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                    />
+                                    <span>Select All</span>
+                                </label>
+                            )}
+
+                            {/* Individual Role Checkboxes */}
+                            {role && role.length > 0 ? (
+                                role.map((r) => (
+                                    <label key={r._id} className="flex w-[18%] items-center space-x-2 text-gray-800">
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedRoles.includes(r._id)}
+                                            onChange={() => handleRoleSelection(r._id)}
+                                            className="form-checkbox h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                        />
+                                        <span>{r.title}</span>
+                                    </label>
+                                ))
+                            ) : (
+                                <p className="text-gray-500">No roles available.</p>
+                            )}
+                        </div>
+                    </div>
+                    
+                  
                     <button
                         type="submit"
                         disabled={loading}
-                        className="bg-blue-500 text-white p-2 rounded-md mt-4 hover:bg-blue-600"
+                        className="w-full bg-blue-600 text-white p-3 rounded-md text-lg font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
                     >
-                        {loading ? 'Adding...' : 'Add Operator'}
+                       {state ? (!loading ? "Edit operator" : "Adding") : (!loading ? "Add operator" : "Adding")}
+
+                        {/* {loading ? 'Adding...' : 'Add Operator'} */}
                     </button>
-                    {error && <p className="text-red-500 mt-2">{error}</p>}
-                    {success && <p className="text-green-500 mt-2">{success}</p>}
+                    {error && <p className="text-red-500 mt-2 text-center">{error}</p>}
+                    {success && <p className="text-green-500 mt-2 text-center">{success}</p>}
                 </form>
             </div>
         </HomeLayout>

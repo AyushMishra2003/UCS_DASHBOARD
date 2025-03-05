@@ -51,7 +51,6 @@ const TextEditor = ({ onClose, initialData, page, child }) => {
   };
 
 
-  console.log(editorContent);
 
 
 

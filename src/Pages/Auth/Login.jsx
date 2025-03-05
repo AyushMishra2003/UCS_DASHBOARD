@@ -44,7 +44,12 @@ const Login = () => {
 
         const response = await dispatch(loginAccount(loginData))
 
+        console.log(response);
+        
+
         if (response?.payload?.success) {
+            console.log("mai kyu nahi aaya hu");
+            
             toast.success('Login successful')
             navigate('/')
         } else {

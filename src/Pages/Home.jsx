@@ -69,12 +69,6 @@ const Home = () => {
     return !booking.driverDetails || Object.keys(booking.driverDetails).length === 0;
   });
 
-  // const filteredNoDriverBookings=noDriverBookings
-
-  // console.log(noDriverBookings);
-  // console.log(filteredNoDriverBookings);
-  
-  
 
   const filteredNoDriverBookings = filterBookings(
     noDriverBookings.filter((booking) => 
@@ -91,7 +85,7 @@ const Home = () => {
   const upcomingPageCount = Math.ceil(upcomingBookings.length / itemsPerPage);
   const noDriverPageCount = Math.ceil(filteredNoDriverBookings.length / itemsPerPage);
 
-  console.log(orderData);
+
   
 
   return (
