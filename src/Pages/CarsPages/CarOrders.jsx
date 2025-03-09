@@ -102,7 +102,7 @@ const CarOrders = ({data}) => {
     const paginatedData = filteredOrderData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     const handleViewDetails = (bookingId) => {
-        navigate(`/carBookings/${bookingId}`);
+        navigate(`/cab-booking/detail/${bookingId}`);
     };
 
      

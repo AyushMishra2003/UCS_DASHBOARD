@@ -75,10 +75,10 @@ const CarBookDetails = () => {
 
     useEffect(() => {
         if (bookDetail && bookDetail.driverDetails) {
-            setDriverDetails(bookDetail.driverDetails);
+            setDriverDetails(bookDetail?.driverDetails);
         }
         if (bookDetail && bookDetail.extraRates) {
-            setExtraRates(bookDetail.extraRates);
+            setExtraRates(bookDetail?.extraRates);
         }
     }, [bookDetail]);
 
@@ -103,7 +103,7 @@ const CarBookDetails = () => {
     };
 
     const handleUpdateDriverDetails = async () => {
-        await dispatch(updateDriverDetails({ id, driverId: editDriver._id, driverDetails }));
+        await dispatch(handleUpdateDriverDetails({ id, driverId: editDriver._id, driverDetails }));
         setEditDriver(null);
         setShowAddDriver(false);
         loadData(); // Refresh data after updating driver details
@@ -189,9 +189,9 @@ const CarBookDetails = () => {
         );
     }
 
-    const isBookingCancelled = bookDetail.status === "cancelled";
-    const isBookingConfirmed = bookDetail.status === 'confirmed';
-    const isBookingComplete = bookDetail.status === "complete";
+    const isBookingCancelled = bookDetail?.status === "cancelled";
+    const isBookingConfirmed = bookDetail?.status === 'confirmed';
+    const isBookingComplete = bookDetail?.status === "complete";
 
 
 
@@ -227,11 +227,11 @@ const CarBookDetails = () => {
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-4">
                     <FaCar className="text-4xl text-blue-600" />
-                    <h2 className="text-3xl font-bold text-gray-800">{bookDetail.category}</h2>
+                    <h2 className="text-3xl font-bold text-gray-800">{bookDetail?.category}</h2>
                 </div>
                 <div className="flex items-center space-x-2">
-                    <span className={`px-4 py-1 text-sm font-medium text-white rounded-full ${bookDetail.status === "cancelled" ? 'bg-red-500' : 'bg-green-500'}`}>
-                        {bookDetail.status}
+                    <span className={`px-4 py-1 text-sm font-medium text-white rounded-full ${bookDetail?.status === "cancelled" ? 'bg-red-500' : 'bg-green-500'}`}>
+                        {bookDetail?.status}
                     </span>
                 </div>
             </div>
@@ -244,10 +244,10 @@ const CarBookDetails = () => {
                <FaEdit/>
             </div>
       
-         <p><strong>Trip Type:</strong> {bookDetail.tripType}</p>
-        {bookDetail.tripType==="One-Way Trip" && <p><strong>From:</strong> {bookDetail?.fromLocation}</p> }
-         {bookDetail.tripType==="One-Way Trip" && <p><strong>To:</strong> {bookDetail?.toLocation}</p>  }
-         {bookDetail.tripType==="Local Trip" && <p><strong>City Name:</strong > {bookDetail?.cityName}</p>}
+         <p><strong>Trip Type:</strong> {bookDetail?.tripType}</p>
+        {bookDetail?.tripType==="One-Way Trip" && <p><strong>From:</strong> {bookDetail?.fromLocation}</p> }
+         {bookDetail?.tripType==="One-Way Trip" && <p><strong>To:</strong> {bookDetail?.toLocation}</p>  }
+         {bookDetail?.tripType==="Local Trip" && <p><strong>City Name:</strong > {bookDetail?.cityName}</p>}
          <p><strong>Pickup Address:</strong> {bookDetail?.pickupAddress}</p>
          <p><strong>Drop Address:</strong> {bookDetail?.dropAddress}</p>
          <p><strong>Pickup Date:</strong> {dayjs(bookDetail?.pickupDate).format('DD-MM-YYYY')}</p>

@@ -121,7 +121,7 @@ const HomeLayout = ({ children }) => {
                                             <div className='flex items-center justify-start gap-2'>
                                                 <LuShoppingBag />    <span>Cab Booking</span>
                                             </div>
-                                            {dropdownActive ? <RiArrowDownSLine className='text-[1.5rem] font-bold' /> : <RiArrowRightSLine className='text-[1.5rem] font-bold' />}
+                                            {dropdownActive ? <RiArrowDownSLine className='text-[1.5rem] font-bold' />  : <RiArrowRightSLine className='text-[1.5rem] font-bold' />}
                                         </div>
                                         {dropdownActive && (
                                             <ul className='mt-2 ml-4'>
