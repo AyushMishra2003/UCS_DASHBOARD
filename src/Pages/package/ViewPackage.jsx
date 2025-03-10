@@ -154,7 +154,7 @@ const ViewPackage = () => {
                       <div className="flex items-center space-x-2">
                         <button
                           className="p-2 rounded bg-blue-500 text-white hover:bg-blue-600 transition"         onClick={() =>
-                            navigate(`/add/package`, { state: { ...pkg } })
+                            navigate(`/packages/add`, { state: { ...pkg } })
                           } >
                           <FaEdit />
                         </button>
