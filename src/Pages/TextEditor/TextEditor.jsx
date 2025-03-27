@@ -6,8 +6,16 @@ import { addChild, addSections } from '../../Redux/Slices/dynamicSlice';
 import draftToHtml from 'draftjs-to-html';
 
 const TextEditor = ({ onClose, initialData, page, child }) => {
+  
+  console.log("initial data is", initialData);
+  
+
+
   const [editorContent, setEditorContent] = useState(initialData.content || "");
   const [title, setTitle] = useState(initialData.title || '');
+  const [metaDescription, setMetaDescription] = useState(initialData?.meta_description || '');
+  const [metaUrl, setMetaUrl] = useState(initialData?.meta_url || '');
+  const [metaTitle, setMetaTitle] = useState(initialData?.meta_title || '');
   const oldTitle = initialData?.title;
   const [category, setCategory] = useState(initialData.category || 'Azolla Benefits');
   const [customField1, setCustomField1] = useState(initialData.customField1 || '');
@@ -23,7 +31,13 @@ const TextEditor = ({ onClose, initialData, page, child }) => {
       description: editorContent,
       customField1,
       photo: attachment,
+      meta_description:metaDescription,
+      meta_title:metaTitle,
+      meta_url:metaUrl
     };
+
+   
+    
 
 
 
@@ -57,7 +71,7 @@ const TextEditor = ({ onClose, initialData, page, child }) => {
 
 
   return (
-    <div className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50">
+    <div className="fixed inset-0 flex justify-center items-center z-50 bg-black bg-opacity-50 ">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-[60%] relative overflow-y-auto max-h-[90vh]">
         <button className="absolute top-3 right-3 text-gray-600 hover:text-black" onClick={onClose}>
           &#x2715;
@@ -93,6 +107,40 @@ const TextEditor = ({ onClose, initialData, page, child }) => {
             value={customField1}
             onChange={(e) => setCustomField1(e.target.value)}
             placeholder="Enter Custom Field"
+            className="w-full p-2 border rounded"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2">Meta Description</label>
+          <input
+            type="text"
+            value={metaDescription}
+            onChange={(e) => setMetaDescription(e.target.value)}
+            placeholder="Enter Meta Desciption"
+            className="w-full p-2 border rounded"
+          />
+        </div>
+
+        
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2">Meta Title</label>
+          <input
+            type="text"
+            value={metaTitle}
+            onChange={(e) => setMetaTitle(e.target.value)}
+            placeholder="Enter Meta Title"
+            className="w-full p-2 border rounded"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2">Meta Url</label>
+          <input
+            type="text"
+            value={metaUrl}
+            onChange={(e) => setMetaUrl(e.target.value)}
+            placeholder="Enter Meta Url"
             className="w-full p-2 border rounded"
           />
         </div>

@@ -61,7 +61,10 @@ const WebsiteDetails = () => {
       content: section.description, // Assuming description is the content you want to edit
       category: section.category || 'Azolla Benefits', // Set a default category if necessary
       customField1: section.customField1 || '', // Include any other fields if necessary
-      attachment: section.image || null // If the image is part of the data
+      attachment: section.image || null, // If the image is part of the data
+      meta_description:section.meta_description,
+      meta_title:section.meta_title,
+      meta_url:section.meta_url
     });
     setIsModalOpen(true); // Open the modal with predefined values
   };

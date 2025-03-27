@@ -60,11 +60,11 @@ export const modelOpen = createAsyncThunk(
 
 export const addSections = createAsyncThunk(
   "discounts/section",
-  async ({data,update,oldTitle}, { rejectWithValue }) => {
+  async ({data,update,oldTitle,meta_description,meta_title,meta_url}, { rejectWithValue }) => {
     try {
-      console.log(data);
+   
 
-      console.log(update);
+      console.log(  meta_description,meta_title,meta_url);
       
 
       const formData = new FormData();
@@ -74,6 +74,10 @@ export const addSections = createAsyncThunk(
       formData.append("photo", data?.photo);
       formData.append("page", data?.page);
       formData.append("oldtitle",oldTitle);
+      formData.append("meta_description",data?.meta_description)
+      formData.append("meta_title",data?.meta_title)
+      formData.append("meta_url",data?.meta_url)
+
 
       let response
       
@@ -146,18 +150,22 @@ export const deleteAllInquiry = createAsyncThunk(
 
 export const addChild = createAsyncThunk(
   "discounts/section/chid",
-  async ({ data, child,update,oldTitle }, { rejectWithValue }) => {
+  async ({ data, child,update,oldTitle,meta_description,meta_title,meta_url }, { rejectWithValue }) => {
     try {
        
-      console.log("func oldTitle",oldTitle)
+       console.log(data);
+       
 
       const formData = new FormData();
       formData.append("title", data?.title);
       formData.append("description", data?.description);
       formData.append("photo", data?.photo);
       formData.append("oldTitle",oldTitle)
+      formData.append("meta_description",data?.meta_description)
+      formData.append("meta_title",data?.meta_title)
+      formData.append("meta_url",data?.meta_url)
 
-      console.log("form data is",formData);
+
       
 
       let response
@@ -173,8 +181,7 @@ export const addChild = createAsyncThunk(
           formData
         );
       }
-     
-      console.log(response);
+
 
       toast.success(response.data.message);
       return response.data;
@@ -189,7 +196,7 @@ export const getSpecificSection = createAsyncThunk(
   "discounts/specificSection",
   async (data, { rejectWithValue }) => {
     try {
-      console.log(data);
+     
 
       const response = await axiosInstance1.post(`/dynamic/get/section`, data);
       console.log(response);
